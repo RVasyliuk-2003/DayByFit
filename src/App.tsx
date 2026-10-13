@@ -1,7 +1,7 @@
 import "./reset.css";
 import "./App.css";
 
-import CalendarPage from "./components/CalendarPage/CalendarPage";
+import CalendarPage from "./components/pages/CalendarPage/CalendarPage";
 import NavBar from "./components/NavBar/NavBar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
