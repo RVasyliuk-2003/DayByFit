@@ -7,16 +7,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <>
+    <BrowserRouter>
       <main className="mobileContainer">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<CalendarPage />} />
-            <Route path="/NavBar" element={<NavBar />} />
-          </Routes>
-        </BrowserRouter>
+        <Routes>
+          <Route path="/" element={<CalendarPage />} />
+        </Routes>
       </main>
-    </>
+      <NavBar />
+    </BrowserRouter>
   );
 }
 

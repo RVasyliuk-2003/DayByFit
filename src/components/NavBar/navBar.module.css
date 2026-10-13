@@ -1,0 +1,65 @@
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background-color: var(--ink);
+  padding: 10px 8px;
+  border-radius: 22px 22px 0 0;
+}
+
+.link {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  min-height: 48px;
+  padding: 6px 0;
+  color: rgba(231, 233, 227, 0.72);
+  font: 600 12px var(--text);
+  text-decoration: none;
+}
+
+.link svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.active {
+  color: var(--tape);
+}
+
+.plus {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: var(--tape);
+  color: var(--ink);
+  margin: 0px auto;
+  padding: 0;
+  place-items: center;
+}
+
+.plus svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.activePlus {
+  box-shadow: 0 0 0 3px var(--chalk);
+}
