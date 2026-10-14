@@ -1,4 +1,3 @@
-import { useState } from "react";
 import style from "./calendarHeader.module.css";
 
 const locale = "uk-UA";
@@ -16,7 +15,7 @@ const CalendarHeader = ({
   selectedDate,
   onSelectDate,
 }: Props) => {
-  
+
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
 

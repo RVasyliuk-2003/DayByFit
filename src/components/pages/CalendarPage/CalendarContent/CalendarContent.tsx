@@ -1,6 +1,6 @@
 import style from "./calendarContent.module.css";
 
-const CalendarContent = () => {
+const CalendarContent = ({ selectedDate }) => {
   return <section></section>;
 };
 
