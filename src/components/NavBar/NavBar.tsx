@@ -20,7 +20,7 @@ const NavBar = () => {
       </NavLink>
 
       <NavLink
-        to="/b"
+        to="/ProgressPage"
         end
         className={({ isActive }) =>
           isActive ? `${style.link} ${style.active}` : style.link
