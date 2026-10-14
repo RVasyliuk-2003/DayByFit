@@ -33,7 +33,7 @@ const NavBar = () => {
       </NavLink>
 
       <NavLink
-        to="/e"
+        to="/AddWorkoutPage"
         end
         className={({ isActive }) =>
           isActive ? `${style.plus} ${style.activePlus}` : style.plus
@@ -45,7 +45,7 @@ const NavBar = () => {
       </NavLink>
 
       <NavLink
-        to="/t"
+        to="/SummaryPage"
         end
         className={({ isActive }) =>
           isActive ? `${style.link} ${style.active}` : style.link
@@ -59,7 +59,7 @@ const NavBar = () => {
       </NavLink>
 
       <NavLink
-        to="/r"
+        to="/ExercisesPage"
         end
         className={({ isActive }) =>
           isActive ? `${style.link} ${style.active}` : style.link

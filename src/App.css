@@ -11,6 +11,17 @@
   border-radius: 0 0 26px 26px;
 }
 
+.top p {
+  color: rgba(231, 233, 227, 0.74);
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.top h1 {
+  font: 700 22px / 1.2 var(--display);
+  letter-spacing: -0.01em;
+}
+
 button {
   cursor: pointer;
 }
