@@ -2,6 +2,8 @@
   padding: 20px 20px 24px;
 
   position: relative;
+
+  padding-bottom: 100px;
 }
 
 .lbl {
@@ -79,15 +81,9 @@
 }
 
 .save_btn {
-  position: fixed;
-  bottom: -20px;
-  left: 50%;
-
-  transform: translate(-50%, -50%);
-
-  margin-bottom: 100px;
+  position: sticky;
+  bottom: 100px;
   margin-top: 24px;
-  max-width: 350px;
   width: 100%;
 
   background: var(--ink);
@@ -117,4 +113,109 @@
   border: 2px solid rgba(20, 33, 61, 0.16);
   background: #fff;
   border-radius: 12px;
+}
+
+.exercises {
+  display: grid;
+  gap: 12px;
+}
+
+.exercise {
+  background: var(--paper);
+  border-radius: 20px;
+  padding: 16px;
+
+  display: grid;
+  gap: 12px;
+  border-left: 6px solid var(--gym);
+}
+
+.inpt_set {
+  width: 100%;
+  min-height: 48px;
+  border: 2px solid rgba(20, 33, 61, 0.16);
+  background: #fff;
+  border-radius: 12px;
+  padding: 0 14px;
+  padding-right: 48px;
+}
+
+.inpt_set:focus-visible {
+  outline: 3px solid var(--gym);
+  outline-offset: 2px;
+}
+
+.exHead,
+.setRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.name_inpt_box {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.btn_close {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(20, 33, 61, 0.08);
+
+  font-size: 28px;
+  font-weight: 700;
+  border: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--ink-2);
+}
+
+.exName {
+  flex: 1;
+
+  width: 100%;
+  min-height: 48px;
+  border: 2px solid rgba(20, 33, 61, 0.16);
+  background: #fff;
+  border-radius: 12px;
+  padding: 0 14px;
+}
+
+.exName:focus-visible {
+  outline: 3px solid var(--gym);
+  outline-offset: 2px;
+}
+
+.setNum {
+  width: 20px;
+  text-align: center;
+  color: var(--ink-2);
+}
+
+.setRow input {
+  width: 80px;
+  min-width: 0;
+}
+
+.x_span {
+  font-weight: 700;
+  text-align: center;
+  color: var(--ink-2);
+  font-size: 20px;
+}
+
+.iconBtn {
+  font-size: 30px;
+  font-weight: 700;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: none;
+  display: grid;
+  place-items: center;
+  color: var(--ink-2);
 }
