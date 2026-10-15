@@ -2,11 +2,21 @@ import style from "./addWorkoutContent.module.css";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import type { TimeOfDay, Workout, Exercise } from "../../../../types";
+import type {
+  TimeOfDay,
+  Workout,
+  Exercise,
+  WorkoutType,
+} from "../../../../types";
 import { toDateKey, fmtDur } from "../../../../date";
-import { defaultTypes, getType } from "../../../../workoutTypes";
 
-type Props = { onAdd: (workout: Workout) => void };
+import { getType, typeColors } from "../../../../workoutTypes";
+
+type Props = {
+  onAdd: (workout: Workout) => void;
+  types: WorkoutType[];
+  onAddType: (type: WorkoutType) => void;
+};
 
 const timeLabels: Record<TimeOfDay, string> = {
   morning: "Ранок",
@@ -20,7 +30,7 @@ const emptyExercise = (): Exercise => ({
   sets: [{ weight: 0, reps: 0 }],
 });
 
-const AddWorkoutContent = ({ onAdd }: Props) => {
+const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
   const navigate = useNavigate();
 
   const [typeId, setTypeId] = useState("gym");
@@ -29,8 +39,6 @@ const AddWorkoutContent = ({ onAdd }: Props) => {
   const [date] = useState(toDateKey(new Date()));
   const [note, setNote] = useState("");
   const [exercises, setExercises] = useState<Exercise[]>([emptyExercise()]);
-
-  const type = getType(typeId);
 
   const addExercise = () => setExercises((prev) => [...prev, emptyExercise()]);
 
@@ -103,23 +111,105 @@ const AddWorkoutContent = ({ onAdd }: Props) => {
     navigate("/");
   };
 
+  const [creating, setCreating] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newColor, setNewColor] = useState(typeColors[0]);
+  const [newHasExercises, setNewHasExercises] = useState(false);
+
+  const type = getType(types, typeId);
+
+  const createType = () => {
+    const name = newName.trim();
+    if (!name) return;
+
+    const created: WorkoutType = {
+      id: crypto.randomUUID(),
+      name,
+      color: newColor,
+      hasExercises: newHasExercises,
+    };
+
+    onAddType(created);
+    setTypeId(created.id);
+    setCreating(false);
+    setNewName("");
+    setNewHasExercises(false);
+  };
+
   return (
     <section>
       <form onSubmit={handleSubmit} className={style.form_main}>
         <span className={style.lbl}>Що тренував</span>
         <div className={style.flexWrap}>
-          {defaultTypes.map((ell) => (
+          {types.map((ell) => (
             <button
               type="button"
               key={ell.id}
-              className={`${style.btn_name} ${typeId === ell.id ? style.active : ""}`}
+              className={style.typeBtn}
+              style={{ "--c": ell.color } as React.CSSProperties}
               onClick={() => setTypeId(ell.id)}
               aria-pressed={typeId === ell.id}
             >
               {ell.name}
             </button>
           ))}
+          <button
+            type="button"
+            className={style.btn_name}
+            onClick={() => setCreating(!creating)}
+            aria-expanded={creating}
+          >
+            + Свій тип
+          </button>
         </div>
+
+        {creating && (
+          <div className={style.newType}>
+            <input
+              className={style.newTypeName}
+              placeholder="Назва (напр. Біг)"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault(); // інакше Enter збереже все тренування
+                  createType();
+                }
+              }}
+            />
+
+            <div className={style.swatches}>
+              {typeColors.map((c) => (
+                <button
+                  type="button"
+                  key={c}
+                  className={`${style.swatch} ${newColor === c ? style.swatchActive : ""}`}
+                  style={{ background: c }}
+                  onClick={() => setNewColor(c)}
+                  aria-pressed={newColor === c}
+                  aria-label={`Колір ${c}`}
+                />
+              ))}
+            </div>
+
+            <label className={style.check}>
+              <input
+                type="checkbox"
+                checked={newHasExercises}
+                onChange={(e) => setNewHasExercises(e.target.checked)}
+              />
+              Записувати вправи й підходи
+            </label>
+
+            <button
+              type="button"
+              className={style.add_btn}
+              onClick={createType}
+            >
+              Додати тип
+            </button>
+          </div>
+        )}
 
         <span className={style.lbl}>Коли</span>
         <div className={style.day_box}>

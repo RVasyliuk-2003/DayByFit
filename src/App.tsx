@@ -10,17 +10,31 @@ import NavBar from "./components/NavBar/NavBar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { useWorkouts } from "./useWorkouts";
+import { useWorkoutTypes } from "./useWorkoutTypes";
 
 const App = () => {
   const { workouts, addWorkout } = useWorkouts();
+  const { types, addType } = useWorkoutTypes();
 
   return (
     <BrowserRouter>
       <main className="mobileContainer">
         <Routes>
-          <Route path="/" element={<CalendarPage workouts={workouts} />} />
+          <Route
+            path="/"
+            element={<CalendarPage workouts={workouts} types={types} />}
+          />
           <Route path="/progress" element={<ProgressPage />} />
-          <Route path="/add" element={<AddWorkoutPage onAdd={addWorkout} />} />
+          <Route
+            path="/add"
+            element={
+              <AddWorkoutPage
+                onAdd={addWorkout}
+                types={types}
+                onAddType={addType}
+              />
+            }
+          />
           <Route path="/summary" element={<SummaryPage />} />
           <Route path="/exercises" element={<ExercisesPage />} />
         </Routes>

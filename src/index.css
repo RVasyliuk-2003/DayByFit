@@ -11,4 +11,6 @@
   --text: "Onest", sans-serif; /* основний текст */
 }
 
-
+body {
+  font-family: var(--text);
+}

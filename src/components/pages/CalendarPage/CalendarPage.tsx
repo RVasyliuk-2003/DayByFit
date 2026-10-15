@@ -2,11 +2,11 @@ import CalendarHeader from "./CalendarHeader/CalendarHeader";
 import CalendarContent from "./CalendarContent/CalendarContent";
 import { useState } from "react";
 
-import type { Workout } from "../../../types";
+import type { Workout, WorkoutType } from "../../../types";
 
-type Props = { workouts: Workout[] };
+type Props = { workouts: Workout[]; types: WorkoutType[] };
 
-const CalendarPage = ({ workouts }: Props) => {
+const CalendarPage = ({ workouts, types }: Props) => {
   const [viewDate, setViewDate] = useState(new Date()); // який місяць показаний
   const [selectedDate, setSelectedDate] = useState(new Date()); // який день обраний
 
@@ -20,7 +20,11 @@ const CalendarPage = ({ workouts }: Props) => {
         workouts={workouts}
       />
 
-      <CalendarContent selectedDate={selectedDate} workouts={workouts} />
+      <CalendarContent
+        selectedDate={selectedDate}
+        workouts={workouts}
+        types={types}
+      />
     </section>
   );
 };

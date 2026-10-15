@@ -1,16 +1,17 @@
 import style from "./calendarContent.module.css";
 import ExerciseRow from "./ExerciseRow";
 
-import type { Workout } from "../../../../types";
+import type { Workout, WorkoutType } from "../../../../types";
 import { toDateKey, fmtDur } from "../../../../date";
 import { getType, timeLabels } from "../../../../workoutTypes";
 
 type Props = {
   selectedDate: Date;
   workouts: Workout[];
+  types: WorkoutType[];
 };
 
-const CalendarContent = ({ selectedDate, workouts }: Props) => {
+const CalendarContent = ({ selectedDate, workouts, types }: Props) => {
   const selectedKey = toDateKey(selectedDate);
   const dayWorkouts = workouts.filter((w) => w.date === selectedKey);
 
@@ -20,7 +21,7 @@ const CalendarContent = ({ selectedDate, workouts }: Props) => {
         <p className={style.noTraining}>У цей день тренувань немає</p>
       ) : (
         dayWorkouts.map((w) => {
-          const type = getType(w.typeId);
+          const type = getType(types, w.typeId);
           return (
             <article
               key={w.id}
