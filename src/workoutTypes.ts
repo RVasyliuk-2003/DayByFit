@@ -7,3 +7,12 @@ export const defaultTypes: WorkoutType[] = [
 ];
 
 export const getType = (id: string) => defaultTypes.find((t) => t.id === id);
+
+import type { TimeOfDay } from "./types";
+
+export const timeLabels: Record<TimeOfDay, string> = {
+  morning: "Ранок",
+  day: "День",
+  evening: "Вечір",
+  night: "Ніч",
+};

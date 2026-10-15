@@ -162,22 +162,17 @@ const AddWorkoutContent = ({ onAdd }: Props) => {
             {exercises.map((ex, i) => (
               <div key={i} className={style.exercise}>
                 <div className={style.exHead}>
-                  <div className={style.name_inpt_box}>
-                    <input
-                      className={style.exName}
-                      placeholder="Назва вправи"
-                      value={ex.name}
-                      onChange={(e) => renameExercise(i, e.target.value)}
-                    />
-                    <button type="button" className={style.btn_close}>
-                      ×
-                    </button>
-                  </div>
+                  <input
+                    className={style.exName}
+                    placeholder="Назва вправи"
+                    value={ex.name}
+                    onChange={(e) => renameExercise(i, e.target.value)}
+                  />
 
                   {exercises.length > 1 && (
                     <button
                       type="button"
-                      className={style.iconBtn}
+                      className={style.btn_close}
                       onClick={() => removeExercise(i)}
                       aria-label="Видалити вправу"
                     >
