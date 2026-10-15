@@ -1,12 +1,20 @@
 import style from "./calendarHeader.module.css";
 
+import type { Workout } from "../../../../types";
+import { fmtDur } from "../../../../date";
+
 const locale = "uk-UA";
+
+const pluralRules = new Intl.PluralRules(locale);
+const workoutsWord = (n: number) =>
+  pluralRules.select(n) === "many" ? "тренувань" : "тренування";
 
 type Props = {
   viewDate: Date;
   setViewDate: (date: Date) => void;
   selectedDate: Date;
   onSelectDate: (date: Date) => void;
+  workouts: Workout[];
 };
 
 const CalendarHeader = ({
@@ -14,8 +22,8 @@ const CalendarHeader = ({
   setViewDate,
   selectedDate,
   onSelectDate,
+  workouts,
 }: Props) => {
-
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
 
@@ -38,6 +46,11 @@ const CalendarHeader = ({
     ),
   );
 
+  const monthKey = `${year}-${String(month + 1).padStart(2, "0")}`;
+  const monthWorkouts = workouts.filter((w) => w.date.startsWith(monthKey));
+  const count = monthWorkouts.length;
+  const totalMin = monthWorkouts.reduce((sum, w) => sum + w.durationMin, 0);
+
   const prevMonth = () => setViewDate(new Date(year, month - 1, 1));
   const nextMonth = () => setViewDate(new Date(year, month + 1, 1));
 
@@ -49,14 +62,26 @@ const CalendarHeader = ({
             <h1 className={style.h1}>
               {monthName} {year}
             </h1>
-            <p className={style.p}>13 тренувань, 12 год 40 хв</p>
+            <p className={style.p}>
+              {count === 0
+                ? "Тренувань ще немає"
+                : `${count} ${workoutsWord(count)}, ${fmtDur(totalMin)}`}
+            </p>
           </div>
 
           <div className={style.btns}>
-            <button onClick={prevMonth} aria-label="Попередній місяць">
+            <button
+              type="button"
+              onClick={prevMonth}
+              aria-label="Попередній місяць"
+            >
               ←
             </button>
-            <button onClick={nextMonth} aria-label="Наступний місяць">
+            <button
+              type="button"
+              onClick={nextMonth}
+              aria-label="Наступний місяць"
+            >
               →
             </button>
           </div>
@@ -80,6 +105,7 @@ const CalendarHeader = ({
 
           return (
             <button
+              type="button"
               key={id}
               className={
                 isSelected ? `${style.day} ${style.selected}` : style.day

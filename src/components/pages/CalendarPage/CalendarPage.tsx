@@ -17,6 +17,7 @@ const CalendarPage = ({ workouts }: Props) => {
         setViewDate={setViewDate}
         selectedDate={selectedDate}
         onSelectDate={setSelectedDate}
+        workouts={workouts}
       />
 
       <CalendarContent selectedDate={selectedDate} workouts={workouts} />
