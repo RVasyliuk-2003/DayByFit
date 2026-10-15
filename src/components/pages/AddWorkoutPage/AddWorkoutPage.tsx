@@ -1,15 +1,14 @@
 import AddWorkoutHeader from "./AddWorkoutHeader/AddWorkoutHeader";
 import AddWorkoutContent from "./AddWorkoutContent/AddWorkoutContent";
 
-// import type { Workout } from "../../../types";
-// type Props = { onAdd: (workout: Workout) => void };
+import type { Workout } from "../../../types";
+type Props = { onAdd: (workout: Workout) => void };
 
-const AddWorkoutPage = () => {
+const AddWorkoutPage = ({ onAdd }: Props) => {
   return (
     <section>
       <AddWorkoutHeader />
-      <AddWorkoutContent />
-      {/* onAdd={onAdd} */}
+      <AddWorkoutContent onAdd={onAdd} />
     </section>
   );
 };

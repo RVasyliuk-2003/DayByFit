@@ -1,0 +1,120 @@
+.form_main {
+  padding: 20px 20px 24px;
+
+  position: relative;
+}
+
+.lbl {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink-2);
+  margin: 20px 0 8px;
+  display: block;
+}
+
+.flexWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn_name {
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 14px;
+  border: 2px solid var(--c);
+  background: transparent;
+  font: 600 15px var(--text);
+}
+
+.day_box {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+  background: rgba(20, 33, 61, 0.09);
+  padding: 4px;
+  border-radius: 16px;
+}
+
+.time_box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--paper);
+  border-radius: 16px;
+  padding: 6px;
+}
+
+.time_btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 0;
+  background: rgba(20, 33, 61, 0.09);
+  font: 700 22px var(--text);
+}
+
+.time_inpt {
+  font: 700 18px var(--display);
+  background: none;
+  border: none;
+  text-align: center;
+}
+
+.add_btn {
+  width: 100%;
+  margin-top: 12px;
+  min-height: 48px;
+  border-radius: 14px;
+  font: 700 15px var(--text);
+  padding: 0 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  border: 2px solid rgba(20, 33, 61, 0.22);
+}
+
+.save_btn {
+  position: fixed;
+  bottom: -20px;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  margin-bottom: 100px;
+  margin-top: 24px;
+  max-width: 350px;
+  width: 100%;
+
+  background: var(--ink);
+  color: var(--tape);
+
+  min-height: 48px;
+  border-radius: 14px;
+  border: 0;
+  font: 700 15px var(--text);
+  padding: 0 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.active {
+  background: var(--ink);
+  color: #fff;
+}
+
+.note {
+  padding: 12px 14px;
+  min-height: 110px;
+  resize: vertical;
+  width: 100%;
+  border: 2px solid rgba(20, 33, 61, 0.16);
+  background: #fff;
+  border-radius: 12px;
+}
