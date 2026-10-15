@@ -3,6 +3,12 @@
    License: none (public domain)
 */
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body,
 div,

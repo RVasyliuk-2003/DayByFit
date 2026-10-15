@@ -155,7 +155,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
           ))}
           <button
             type="button"
-            className={style.btn_name}
+            className={`${style.btn_name} ${style.btn_type}`}
             onClick={() => setCreating(!creating)}
             aria-expanded={creating}
           >

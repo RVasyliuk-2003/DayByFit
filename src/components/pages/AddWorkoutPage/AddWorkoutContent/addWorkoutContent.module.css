@@ -24,11 +24,14 @@
   min-height: 46px;
   padding: 0 18px;
   border-radius: 14px;
-  border: 2px dashed var(--c);
+  border: 2px solid var(--c);
   background: transparent;
   font: 600 15px var(--text);
+}
 
+.btn_type {
   --c: rgba(20, 33, 61, 0.32);
+  border-style: dashed;
 }
 
 .day_box {
