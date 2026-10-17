@@ -11,6 +11,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { useWorkouts } from "./useWorkouts";
 import { useWorkoutTypes } from "./useWorkoutTypes";
+import LangSwitch from "./components/LangSwitch/LangSwitch";
 
 const App = () => {
   const { workouts, addWorkout, removeWorkout } = useWorkouts();
@@ -19,6 +20,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <main className="mobileContainer">
+        <LangSwitch />
         <Routes>
           <Route
             path="/"

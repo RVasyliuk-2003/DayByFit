@@ -1,0 +1,9 @@
+{
+  "nav": {
+    "calendar": "Calendar",
+    "progress": "Progress",
+    "add": "Add workout",
+    "summary": "Summary",
+    "exercises": "Exercises"
+  }
+}

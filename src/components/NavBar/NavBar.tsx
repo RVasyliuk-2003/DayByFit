@@ -1,8 +1,11 @@
 import style from "./navBar.module.css";
+import { useTranslation } from "react-i18next";
 
 import { NavLink } from "react-router-dom";
 
 const NavBar = () => {
+  const { t } = useTranslation();
+
   return (
     <nav className={style.nav} aria-label="Розділи">
       <NavLink
@@ -16,7 +19,7 @@ const NavBar = () => {
           <rect x="3" y="5" width="18" height="16" rx="3" />
           <path d="M8 3v4M16 3v4M3 10h18" />
         </svg>
-        <span>Календар</span>
+        <span>{t("nav.calendar")}</span>
       </NavLink>
 
       <NavLink
@@ -29,7 +32,7 @@ const NavBar = () => {
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6" />
         </svg>
-        <span>Прогрес</span>
+        <span>{t("nav.progress")}</span>
       </NavLink>
 
       <NavLink
@@ -39,7 +42,7 @@ const NavBar = () => {
           isActive ? `${style.plus} ${style.activePlus}` : style.plus
         }
       >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true" aria-label={t("nav.add")}>
           <path d="M12 5v14M5 12h14" />
         </svg>
       </NavLink>
@@ -55,7 +58,7 @@ const NavBar = () => {
           <rect x="3" y="4" width="18" height="16" rx="3" />
           <path d="M3 10h18M3 15h18M10 4v16" />
         </svg>
-        <span>Підсумок</span>
+        <span>{t("nav.summary")}</span>
       </NavLink>
 
       <NavLink
@@ -68,7 +71,7 @@ const NavBar = () => {
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12" />
         </svg>
-        <span>Вправи</span>
+        <span>{t("nav.exercises")}</span>
       </NavLink>
     </nav>
   );
