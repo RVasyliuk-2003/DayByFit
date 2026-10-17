@@ -2,7 +2,7 @@ import style from "./progressContent.module.css";
 
 import { useState } from "react";
 import type { Workout } from "../../../../types";
-import { toDateKey } from "../../../../date";
+import { toDateKey, shortDate } from "../../../../date";
 import { getExerciseHistory, type ExercisePoint } from "../../../../progress";
 import LineChart from "./LineChart/LineChart";
 
@@ -13,11 +13,6 @@ const PERIODS = [
   { months: 6, label: "6 місяців" },
   { months: 12, label: "Рік" },
 ];
-
-const shortDate = (date: string) => {
-  const [, m, d] = date.split("-");
-  return `${d}.${m}`;
-};
 
 const ProgressContent = ({ workouts, exercise }: Props) => {
   const [metric, setMetric] = useState<"main" | "sets">("main");

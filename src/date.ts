@@ -15,3 +15,8 @@ export const parseDateKey = (key: string | null): Date | null => {
   const date = new Date(y, m - 1, d);
   return toDateKey(date) === key ? date : null;
 };
+
+export const shortDate = (key: string) => {
+  const [, m, d] = key.split("-");
+  return `${d}.${m}`;
+};

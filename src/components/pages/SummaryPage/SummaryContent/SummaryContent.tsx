@@ -2,13 +2,12 @@ import style from "./summaryContent.module.css";
 
 import { useState } from "react";
 import type { Workout, WorkoutType } from "../../../../types";
-import { fmtDur, toDateKey } from "../../../../date";
+import { fmtDur, toDateKey, shortDate } from "../../../../date";
 import { plural } from "../../../../format";
 import { getType, timeLabels } from "../../../../workoutTypes";
 import {
   buildTable,
   getStats,
-  shortDate,
   shortDetails,
   toCsv,
   toTsv,

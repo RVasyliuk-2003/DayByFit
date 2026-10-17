@@ -1,16 +1,11 @@
 import type { TimeOfDay, Workout, WorkoutType } from "./types";
-import { toDateKey } from "./date";
+import { toDateKey, shortDate } from "./date";
 import { getType, timeLabels } from "./workoutTypes";
 import { fmtSet, plural, topSet } from "./format";
 
 export type Period = "week" | "month" | "all" | "custom";
 
 const todOrder: TimeOfDay[] = ["morning", "day", "evening", "night"];
-
-export const shortDate = (key: string) => {
-  const [, m, d] = key.split("-");
-  return `${d}.${m}`;
-};
 
 const fullDate = (key: string) => key.split("-").reverse().join(".");
 

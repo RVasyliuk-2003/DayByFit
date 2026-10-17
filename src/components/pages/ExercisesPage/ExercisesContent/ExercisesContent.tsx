@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import type { Workout } from "../../../../types";
 import { getExerciseSummaries } from "../../../../progress";
 import { fmtSet } from "../../../../format";
-import { shortDate } from "../../../../summary";
+import { shortDate } from "../../../../date";
 
 type Props = { workouts: Workout[] };
 
