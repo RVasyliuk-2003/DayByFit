@@ -48,7 +48,10 @@ const App = () => {
             path="/summary"
             element={<SummaryPage workouts={workouts} types={types} />}
           />
-          <Route path="/exercises" element={<ExercisesPage />} />
+          <Route
+            path="/exercises"
+            element={<ExercisesPage workouts={workouts} />}
+          />
         </Routes>
       </main>
       <NavBar />

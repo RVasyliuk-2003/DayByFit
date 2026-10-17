@@ -1,4 +1,5 @@
 import type { Workout } from "./types";
+import { topSet } from "./format";
 
 export type ExercisePoint = {
   date: string;
@@ -51,4 +52,49 @@ export const getExerciseHistory = (workouts: Workout[], name: string) => {
     points.length > 0 && points.every((p) => p.topWeight === 0);
 
   return { points, bodyweight };
+};
+
+export type ExerciseSummary = {
+  name: string;
+  lastDate: string;
+  topWeight: number;
+  topReps: number;
+  sets: number;
+  count: number;
+};
+
+// По одному запису на вправу, найсвіжіші зверху
+export const getExerciseSummaries = (
+  workouts: Workout[],
+): ExerciseSummary[] => {
+  const map = new Map<string, ExerciseSummary>();
+
+  for (const w of workouts) {
+    for (const ex of w.exercises ?? []) {
+      if (ex.sets.length === 0) continue;
+
+      const key = normalize(ex.name);
+      const prev = map.get(key);
+      const count = (prev?.count ?? 0) + 1;
+
+      if (!prev || w.date >= prev.lastDate) {
+        const top = topSet(ex.sets);
+        map.set(key, {
+          name: ex.name.trim(),
+          lastDate: w.date,
+          topWeight: top.weight,
+          topReps: top.reps,
+          sets: ex.sets.length,
+          count,
+        });
+      } else {
+        prev.count = count;
+      }
+    }
+  }
+
+  return [...map.values()].sort(
+    (a, b) =>
+      b.lastDate.localeCompare(a.lastDate) || a.name.localeCompare(b.name),
+  );
 };
