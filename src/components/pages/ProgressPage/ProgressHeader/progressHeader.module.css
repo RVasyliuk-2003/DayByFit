@@ -11,13 +11,13 @@
 
 .sel {
   width: 100%;
-  min-height: 48px;
+  min-height: 46px;
   margin-top: 16px;
   border-radius: 14px;
   border: 0;
   background: rgba(255, 255, 255, 0.1);
   color: var(--chalk);
-  font: 600 16px var(--text);
+  font: 600 15px var(--text);
   padding: 0 14px;
 }
 

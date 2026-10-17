@@ -1,6 +1,12 @@
 import style from "./progressHeader.module.css";
 
-const ProgressHeader = () => {
+type Props = {
+  names: string[];
+  value: string;
+  onChange: (name: string) => void;
+};
+
+const ProgressHeader = ({ names, value, onChange }: Props) => {
   return (
     <section className="top">
       <header>
@@ -8,7 +14,20 @@ const ProgressHeader = () => {
         <p className={style.p}>Будь-яка вправа за обраний період</p>
       </header>
 
-      <select className={style.sel}></select>
+      {names.length > 0 && (
+        <select
+          className={style.sel}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          aria-label="Вправа"
+        >
+          {names.map((n) => (
+            <option key={n} value={n}>
+              {n}
+            </option>
+          ))}
+        </select>
+      )}
     </section>
   );
 };

@@ -30,7 +30,10 @@ const App = () => {
               />
             }
           />
-          <Route path="/progress" element={<ProgressPage />} />
+          <Route
+            path="/progress"
+            element={<ProgressPage workouts={workouts} />}
+          />
           <Route
             path="/add"
             element={
