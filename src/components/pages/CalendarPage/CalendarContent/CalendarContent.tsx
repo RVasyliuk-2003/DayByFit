@@ -27,7 +27,7 @@ const CalendarContent = ({
   };
 
   return (
-    <section className={style.list}>
+    <section className={style.list} style={{padding: "20px 20px 24px"}}>
       {dayWorkouts.length === 0 ? (
         <p className={style.noTraining}>У цей день тренувань немає</p>
       ) : (

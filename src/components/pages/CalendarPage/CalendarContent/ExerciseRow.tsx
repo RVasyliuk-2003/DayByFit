@@ -4,8 +4,7 @@ import type { Exercise } from "../../../../types";
 
 type Props = { exercise: Exercise };
 
-const fmtSet = (weight: number, reps: number) =>
-  weight > 0 ? `${weight} кг × ${reps}` : `${reps} повт.`;
+import { fmtSet } from "../../../../format";
 
 const ExerciseRow = ({ exercise }: Props) => {
   const [open, setOpen] = useState(false);

@@ -54,94 +54,97 @@ const ProgressContent = ({ workouts, exercise }: Props) => {
   const periodLabel = PERIODS.find((p) => p.months === months)?.label;
 
   return (
-    <div className={style.wrap}>
-      <div className={style.seg} role="group" aria-label="Що показувати">
-        <button
-          type="button"
-          aria-pressed={metric === "main"}
-          onClick={() => setMetric("main")}
-        >
-          {bodyweight ? "Повтори" : "Вага"}
-        </button>
-        <button
-          type="button"
-          aria-pressed={metric === "sets"}
-          onClick={() => setMetric("sets")}
-        >
-          Підходи
-        </button>
-      </div>
-
-      <div className={style.card}>
-        {values.length === 0 && (
-          <h2 className={style.h2}>За цей період записів немає</h2>
-        )}
-
-        {values.length === 1 && (
-          <>
-            <h2 className={style.h2}>
-              Зараз {end} {unit}
-            </h2>
-            <p className={style.sub}>Один запис за цей період</p>
-            <p className={style.hint}>
-              Графік з'явиться, коли буде хоча б два тренування з цією вправою.
-            </p>
-          </>
-        )}
-
-        {values.length > 1 && (
-          <>
-            <h2 className={style.h2}>
-              З {values[0]} до {end} {unit}
-            </h2>
-            <p className={style.sub}>
-              {delta === 0 ? (
-                `Без змін за ${periodLabel}`
-              ) : (
-                <>
-                  <strong>
-                    {delta > 0 ? "+" : "−"}
-                    {Math.abs(delta)} {unit}
-                  </strong>{" "}
-                  за {periodLabel}
-                </>
-              )}
-            </p>
-            <LineChart values={values} labels={labels} />
-          </>
-        )}
-      </div>
-
-      <div className={style.seg} role="group" aria-label="Період">
-        {PERIODS.map((p) => (
+    <section style={{ padding: "20px 20px 24px" }}>
+      <div className={style.wrap}>
+        <div className={style.seg} role="group" aria-label="Що показувати">
           <button
             type="button"
-            key={p.months}
-            aria-pressed={months === p.months}
-            onClick={() => setMonths(p.months)}
+            aria-pressed={metric === "main"}
+            onClick={() => setMetric("main")}
           >
-            {p.label}
+            {bodyweight ? "Повтори" : "Вага"}
           </button>
-        ))}
-      </div>
+          <button
+            type="button"
+            aria-pressed={metric === "sets"}
+            onClick={() => setMetric("sets")}
+          >
+            Підходи
+          </button>
+        </div>
 
-      <div className={style.facts}>
-        <div>
-          <span>{bodyweight ? "Найбільше повторів" : "Найбільша вага"}</span>
-          <b>
-            {Math.max(...all.map(mainValue))} {mainUnit}
-          </b>
+        <div className={style.card}>
+          {values.length === 0 && (
+            <h2 className={style.h2}>За цей період записів немає</h2>
+          )}
+
+          {values.length === 1 && (
+            <>
+              <h2 className={style.h2}>
+                Зараз {end} {unit}
+              </h2>
+              <p className={style.sub}>Один запис за цей період</p>
+              <p className={style.hint}>
+                Графік з'явиться, коли буде хоча б два тренування з цією
+                вправою.
+              </p>
+            </>
+          )}
+
+          {values.length > 1 && (
+            <>
+              <h2 className={style.h2}>
+                З {values[0]} до {end} {unit}
+              </h2>
+              <p className={style.sub}>
+                {delta === 0 ? (
+                  `Без змін за ${periodLabel}`
+                ) : (
+                  <>
+                    <strong>
+                      {delta > 0 ? "+" : "−"}
+                      {Math.abs(delta)} {unit}
+                    </strong>{" "}
+                    за {periodLabel}
+                  </>
+                )}
+              </p>
+              <LineChart values={values} labels={labels} />
+            </>
+          )}
         </div>
-        <div>
-          <span>Найбільше підходів</span>
-          <b>{Math.max(...all.map((p) => p.sets))}</b>
+
+        <div className={style.seg} role="group" aria-label="Період">
+          {PERIODS.map((p) => (
+            <button
+              type="button"
+              key={p.months}
+              aria-pressed={months === p.months}
+              onClick={() => setMonths(p.months)}
+            >
+              {p.label}
+            </button>
+          ))}
         </div>
-        <div>
-          <span>Тренувань з цією вправою</span>
-          <b>{all.length}</b>
+
+        <div className={style.facts}>
+          <div>
+            <span>{bodyweight ? "Найбільше повторів" : "Найбільша вага"}</span>
+            <b>
+              {Math.max(...all.map(mainValue))} {mainUnit}
+            </b>
+          </div>
+          <div>
+            <span>Найбільше підходів</span>
+            <b>{Math.max(...all.map((p) => p.sets))}</b>
+          </div>
+          <div>
+            <span>Тренувань з цією вправою</span>
+            <b>{all.length}</b>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

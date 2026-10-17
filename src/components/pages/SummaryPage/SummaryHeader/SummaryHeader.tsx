@@ -1,9 +1,11 @@
-const SummaryHeader = () => {
+type Props = { subtitle: string };
+
+const SummaryHeader = ({ subtitle }: Props) => {
   return (
     <section>
       <header className="top">
         <h1 className="h1">Підсумок</h1>
-        <p className="p">Жовтень 2026</p>
+        <p className="p">{subtitle}</p>
       </header>
     </section>
   );
