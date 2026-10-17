@@ -67,3 +67,16 @@
 .selected {
   box-shadow: inset 0 0 0 3px #fff;
 }
+
+.has {
+  color: #fff;
+}
+
+.today {
+  outline: 2px solid var(--tape);
+  outline-offset: 2px;
+}
+
+.selected {
+  box-shadow: inset 0 0 0 3px #fff;
+}

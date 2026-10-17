@@ -1,7 +1,8 @@
 import style from "./calendarHeader.module.css";
 
-import type { Workout } from "../../../../types";
-import { fmtDur } from "../../../../date";
+import type { Workout, WorkoutType } from "../../../../types";
+import { fmtDur, toDateKey } from "../../../../date";
+import { getType } from "../../../../workoutTypes";
 
 const locale = "uk-UA";
 
@@ -9,12 +10,22 @@ const pluralRules = new Intl.PluralRules(locale);
 const workoutsWord = (n: number) =>
   pluralRules.select(n) === "many" ? "тренувань" : "тренування";
 
+const dayBackground = (colors: string[]) => {
+  if (colors.length === 1) return colors[0];
+  const step = 100 / colors.length;
+  const parts = colors.map(
+    (c, i) => `${c} ${(i * step).toFixed(2)}% ${((i + 1) * step).toFixed(2)}%`,
+  );
+  return `linear-gradient(135deg, ${parts.join(", ")})`;
+};
+
 type Props = {
   viewDate: Date;
   setViewDate: (date: Date) => void;
   selectedDate: Date;
   onSelectDate: (date: Date) => void;
   workouts: Workout[];
+  types: WorkoutType[];
 };
 
 const CalendarHeader = ({
@@ -23,6 +34,7 @@ const CalendarHeader = ({
   selectedDate,
   onSelectDate,
   workouts,
+  types,
 }: Props) => {
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
@@ -48,6 +60,18 @@ const CalendarHeader = ({
 
   const monthKey = `${year}-${String(month + 1).padStart(2, "0")}`;
   const monthWorkouts = workouts.filter((w) => w.date.startsWith(monthKey));
+
+  const colorsByDate = new Map<string, string[]>();
+  for (const w of monthWorkouts) {
+    const color = getType(types, w.typeId)?.color;
+    if (!color) continue;
+    const list = colorsByDate.get(w.date) ?? [];
+    if (!list.includes(color)) list.push(color);
+    colorsByDate.set(w.date, list);
+  }
+
+  const todayKey = toDateKey(new Date());
+
   const count = monthWorkouts.length;
   const totalMin = monthWorkouts.reduce((sum, w) => sum + w.durationMin, 0);
 
@@ -103,13 +127,24 @@ const CalendarHeader = ({
             selectedDate.getMonth() === month &&
             selectedDate.getDate() === cell;
 
+          const key = toDateKey(new Date(year, month, cell));
+          const colors = colorsByDate.get(key);
+
+          const className = [
+            style.day,
+            isSelected && style.selected,
+            colors && style.has,
+            key === todayKey && style.today,
+          ]
+            .filter(Boolean)
+            .join(" ");
+
           return (
             <button
               type="button"
               key={id}
-              className={
-                isSelected ? `${style.day} ${style.selected}` : style.day
-              }
+              className={className}
+              style={colors ? { background: dayBackground(colors) } : undefined}
               onClick={() => onSelectDate(new Date(year, month, cell))}
               aria-pressed={isSelected}
             >

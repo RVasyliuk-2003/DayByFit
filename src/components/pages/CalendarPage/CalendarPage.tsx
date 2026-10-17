@@ -28,6 +28,7 @@ const CalendarPage = ({ workouts, types, onDelete }: Props) => {
         selectedDate={selectedDate}
         onSelectDate={setSelectedDate}
         workouts={workouts}
+        types={types}
       />
 
       <CalendarContent
