@@ -163,6 +163,9 @@
   align-items: center;
   width: 100%;
 }
+.setRow {
+  justify-content: space-around;
+}
 
 .btn_close {
   width: 48px;
@@ -202,7 +205,7 @@
 }
 
 .setRow input {
-  width: 80px;
+  width: 120px;
   min-width: 0;
 }
 
@@ -215,7 +218,6 @@
 
 .iconBtn {
   font-size: 30px;
-  font-weight: 700;
   width: 44px;
   height: 44px;
   border: 0;
@@ -279,4 +281,10 @@
 .typeBtn[aria-pressed="true"] {
   background: var(--c);
   color: #fff;
+}
+
+.dateLine {
+  margin: 0;
+  font: 700 18px var(--display);
+  text-transform: capitalize;
 }

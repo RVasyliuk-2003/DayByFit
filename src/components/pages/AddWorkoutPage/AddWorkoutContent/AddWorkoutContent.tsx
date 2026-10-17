@@ -1,14 +1,14 @@
 import style from "./addWorkoutContent.module.css";
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import type {
   TimeOfDay,
   Workout,
   Exercise,
   WorkoutType,
 } from "../../../../types";
-import { toDateKey, fmtDur } from "../../../../date";
+import { toDateKey, fmtDur, parseDateKey } from "../../../../date";
 
 import { getType, typeColors } from "../../../../workoutTypes";
 
@@ -36,7 +36,15 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
   const [typeId, setTypeId] = useState("gym");
   const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>("evening");
   const [durationMin, setDurationMin] = useState(60);
-  const [date] = useState(toDateKey(new Date()));
+  const [searchParams] = useSearchParams();
+  const dateObj = parseDateKey(searchParams.get("date")) ?? new Date();
+  const date = toDateKey(dateObj);
+
+  const dateLabel = new Intl.DateTimeFormat("uk-UA", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  }).format(dateObj);
   const [note, setNote] = useState("");
   const [exercises, setExercises] = useState<Exercise[]>([emptyExercise()]);
 
@@ -108,7 +116,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
     };
 
     onAdd(workout);
-    navigate("/");
+    navigate(`/?date=${date}`);
   };
 
   const [creating, setCreating] = useState(false);
@@ -139,6 +147,8 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
   return (
     <section>
       <form onSubmit={handleSubmit} className={style.form_main}>
+        <p className={style.dateLine}>{dateLabel}</p>
+
         <span className={style.lbl}>Що тренував</span>
         <div className={style.flexWrap}>
           {types.map((ell) => (

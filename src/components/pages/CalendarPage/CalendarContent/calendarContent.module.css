@@ -137,3 +137,25 @@
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
+
+.del {
+  display: block;
+  margin: 4px 16px 14px auto;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  font: 600 13px var(--text);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.addLink {
+  display: grid;
+  place-items: center;
+  min-height: 48px;
+  border: 2px dashed var(--line);
+  border-radius: 14px;
+  color: var(--ink);
+  font: 700 15px var(--text);
+  text-decoration: none;
+}

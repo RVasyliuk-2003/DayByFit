@@ -20,5 +20,8 @@ export const useWorkouts = () => {
   const addWorkout = (workout: Workout) =>
     setWorkouts((prev) => [...prev, workout]);
 
-  return { workouts, addWorkout };
+  const removeWorkout = (id: string) =>
+    setWorkouts((prev) => prev.filter((w) => w.id !== id));
+
+  return { workouts, addWorkout, removeWorkout };
 };

@@ -13,7 +13,7 @@ import { useWorkouts } from "./useWorkouts";
 import { useWorkoutTypes } from "./useWorkoutTypes";
 
 const App = () => {
-  const { workouts, addWorkout } = useWorkouts();
+  const { workouts, addWorkout, removeWorkout } = useWorkouts();
   const { types, addType } = useWorkoutTypes();
 
   return (
@@ -22,7 +22,13 @@ const App = () => {
         <Routes>
           <Route
             path="/"
-            element={<CalendarPage workouts={workouts} types={types} />}
+            element={
+              <CalendarPage
+                workouts={workouts}
+                types={types}
+                onDelete={removeWorkout}
+              />
+            }
           />
           <Route path="/progress" element={<ProgressPage />} />
           <Route

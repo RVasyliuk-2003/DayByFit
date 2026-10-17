@@ -1,5 +1,6 @@
 import style from "./calendarContent.module.css";
 import ExerciseRow from "./ExerciseRow";
+import { Link } from "react-router-dom";
 
 import type { Workout, WorkoutType } from "../../../../types";
 import { toDateKey, fmtDur } from "../../../../date";
@@ -9,11 +10,21 @@ type Props = {
   selectedDate: Date;
   workouts: Workout[];
   types: WorkoutType[];
+  onDelete: (id: string) => void;
 };
 
-const CalendarContent = ({ selectedDate, workouts, types }: Props) => {
+const CalendarContent = ({
+  selectedDate,
+  workouts,
+  types,
+  onDelete,
+}: Props) => {
   const selectedKey = toDateKey(selectedDate);
   const dayWorkouts = workouts.filter((w) => w.date === selectedKey);
+
+  const handleDelete = (id: string) => {
+    if (window.confirm("Видалити це тренування?")) onDelete(id);
+  };
 
   return (
     <section className={style.list}>
@@ -40,10 +51,22 @@ const CalendarContent = ({ selectedDate, workouts, types }: Props) => {
               ))}
 
               {w.note && <p className={style.note}>{w.note}</p>}
+
+              <button
+                type="button"
+                className={style.del}
+                onClick={() => handleDelete(w.id)}
+              >
+                Видалити
+              </button>
             </article>
           );
         })
       )}
+
+      <Link to={`/add?date=${selectedKey}`} className={style.addLink}>
+        + Додати тренування
+      </Link>
     </section>
   );
 };

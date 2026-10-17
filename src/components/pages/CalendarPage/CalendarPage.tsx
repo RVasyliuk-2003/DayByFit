@@ -1,14 +1,24 @@
 import CalendarHeader from "./CalendarHeader/CalendarHeader";
 import CalendarContent from "./CalendarContent/CalendarContent";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import type { Workout, WorkoutType } from "../../../types";
 
-type Props = { workouts: Workout[]; types: WorkoutType[] };
+import { parseDateKey } from "../../../date";
 
-const CalendarPage = ({ workouts, types }: Props) => {
-  const [viewDate, setViewDate] = useState(new Date()); // який місяць показаний
-  const [selectedDate, setSelectedDate] = useState(new Date()); // який день обраний
+type Props = {
+  workouts: Workout[];
+  types: WorkoutType[];
+  onDelete: (id: string) => void;
+};
+
+const CalendarPage = ({ workouts, types, onDelete }: Props) => {
+  const [searchParams] = useSearchParams();
+  const initial = parseDateKey(searchParams.get("date")) ?? new Date();
+
+  const [viewDate, setViewDate] = useState(new Date(initial)); // який місяць показаний
+  const [selectedDate, setSelectedDate] = useState(new Date(initial)); // який день обраний
 
   return (
     <section>
@@ -24,6 +34,7 @@ const CalendarPage = ({ workouts, types }: Props) => {
         selectedDate={selectedDate}
         workouts={workouts}
         types={types}
+        onDelete={onDelete}
       />
     </section>
   );

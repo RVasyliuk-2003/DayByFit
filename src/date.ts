@@ -8,3 +8,10 @@ export const fmtDur = (min: number) => {
   if (h) return `${h} год`;
   return `${m} хв`;
 };
+
+export const parseDateKey = (key: string | null): Date | null => {
+  if (!key) return null;
+  const [y, m, d] = key.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  return toDateKey(date) === key ? date : null;
+};
