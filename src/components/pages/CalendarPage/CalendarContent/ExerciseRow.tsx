@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { useState } from "react";
 import style from "./calendarContent.module.css";
 import type { Exercise } from "../../../../types";
@@ -7,6 +9,8 @@ type Props = { exercise: Exercise };
 import { fmtSet } from "../../../../format";
 
 const ExerciseRow = ({ exercise }: Props) => {
+  const { t } = useTranslation();
+
   const [open, setOpen] = useState(false);
 
   const maxWeight = Math.max(...exercise.sets.map((s) => s.weight));
@@ -26,7 +30,9 @@ const ExerciseRow = ({ exercise }: Props) => {
       >
         <span className={style.nm}>{exercise.name}</span>
         <span className={style.val}>{fmtSet(top.weight, top.reps)}</span>
-        <span className={style.chip}>{exercise.sets.length}п</span>
+        <span className={style.chip}>
+          {t("set.countShort", { n: exercise.sets.length })}
+        </span>
         <span className={style.chev}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="6 9 12 15 18 9" />

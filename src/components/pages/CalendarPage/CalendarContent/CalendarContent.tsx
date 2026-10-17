@@ -2,9 +2,11 @@ import style from "./calendarContent.module.css";
 import ExerciseRow from "./ExerciseRow";
 import { Link } from "react-router-dom";
 
+import { useTranslation } from "react-i18next";
+import { getType, typeName } from "../../../../workoutTypes";
+
 import type { Workout, WorkoutType } from "../../../../types";
 import { toDateKey, fmtDur } from "../../../../date";
-import { getType, timeLabels } from "../../../../workoutTypes";
 
 type Props = {
   selectedDate: Date;
@@ -19,17 +21,20 @@ const CalendarContent = ({
   types,
   onDelete,
 }: Props) => {
+  const { t } = useTranslation();
+
+
   const selectedKey = toDateKey(selectedDate);
   const dayWorkouts = workouts.filter((w) => w.date === selectedKey);
 
   const handleDelete = (id: string) => {
-    if (window.confirm("Видалити це тренування?")) onDelete(id);
+    if (window.confirm(t("calendar.confirmDelete"))) onDelete(id);
   };
 
   return (
-    <section className={style.list} style={{padding: "20px 20px 24px"}}>
+    <section className={style.list} style={{ padding: "20px 20px 24px" }}>
       {dayWorkouts.length === 0 ? (
-        <p className={style.noTraining}>У цей день тренувань немає</p>
+        <p className={style.noTraining}>{t("calendar.noWorkouts")}</p>
       ) : (
         dayWorkouts.map((w) => {
           const type = getType(types, w.typeId);
@@ -40,9 +45,9 @@ const CalendarContent = ({
               style={{ "--c": type?.color } as React.CSSProperties}
             >
               <header className={style.cardHead}>
-                <h3>{type?.name}</h3>
+                <h3>{typeName(type)}</h3>
                 <span>
-                  {timeLabels[w.timeOfDay]}, {fmtDur(w.durationMin)}
+                  {t(`timeOfDay.${w.timeOfDay}`)}, {fmtDur(w.durationMin)}
                 </span>
               </header>
 
@@ -57,7 +62,7 @@ const CalendarContent = ({
                 className={style.del}
                 onClick={() => handleDelete(w.id)}
               >
-                Видалити
+                {t("calendar.delete")}
               </button>
             </article>
           );
@@ -65,7 +70,7 @@ const CalendarContent = ({
       )}
 
       <Link to={`/add?date=${selectedKey}`} className={style.addLink}>
-        + Додати тренування
+        + {t("calendar.addWorkout")}
       </Link>
     </section>
   );

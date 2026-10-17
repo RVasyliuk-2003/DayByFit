@@ -1,14 +1,11 @@
+import { useTranslation } from "react-i18next";
+import { getLocale } from "../../../../i18n/locale";
+
 import style from "./calendarHeader.module.css";
 
 import type { Workout, WorkoutType } from "../../../../types";
 import { fmtDur, toDateKey } from "../../../../date";
 import { getType } from "../../../../workoutTypes";
-
-const locale = "uk-UA";
-
-const pluralRules = new Intl.PluralRules(locale);
-const workoutsWord = (n: number) =>
-  pluralRules.select(n) === "many" ? "тренувань" : "тренування";
 
 const dayBackground = (colors: string[]) => {
   if (colors.length === 1) return colors[0];
@@ -36,6 +33,9 @@ const CalendarHeader = ({
   workouts,
   types,
 }: Props) => {
+  const { t, i18n } = useTranslation();
+  const locale = getLocale(i18n.language);
+
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
 
@@ -88,8 +88,8 @@ const CalendarHeader = ({
             </h1>
             <p className={style.p}>
               {count === 0
-                ? "Тренувань ще немає"
-                : `${count} ${workoutsWord(count)}, ${fmtDur(totalMin)}`}
+                ? t("calendar.noWorkoutsYet")
+                : t("calendar.summary", { count, duration: fmtDur(totalMin) })}
             </p>
           </div>
 
@@ -97,14 +97,14 @@ const CalendarHeader = ({
             <button
               type="button"
               onClick={prevMonth}
-              aria-label="Попередній місяць"
+              aria-label={t("calendar.prevMonth")}
             >
               ←
             </button>
             <button
               type="button"
               onClick={nextMonth}
-              aria-label="Наступний місяць"
+              aria-label={t("calendar.nextMonth")}
             >
               →
             </button>

@@ -1,4 +1,5 @@
 import type { WorkoutSet } from "./types";
+import i18n from "./i18n";
 
 const rules = new Intl.PluralRules("uk-UA");
 
@@ -8,7 +9,9 @@ export const plural = (n: number, one: string, few: string, many: string) => {
 };
 
 export const fmtSet = (weight: number, reps: number) =>
-  weight > 0 ? `${weight} кг × ${reps}` : `${reps} повт.`;
+  weight > 0
+    ? i18n.t("set.weightReps", { weight, reps })
+    : i18n.t("set.reps", { reps });
 
 export const topSet = (sets: WorkoutSet[]) =>
   sets.reduce((best, s) =>

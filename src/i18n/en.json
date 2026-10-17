@@ -5,5 +5,31 @@
     "add": "Add workout",
     "summary": "Summary",
     "exercises": "Exercises"
+  },
+
+  "calendar": {
+    "noWorkoutsYet": "No workouts yet",
+    "summary_one": "{{count}} workout, {{duration}}",
+    "summary_other": "{{count}} workouts, {{duration}}",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "noWorkouts": "No workouts on this day",
+    "addWorkout": "+ Add workout",
+    "delete": "Delete",
+    "confirmDelete": "Delete this workout?"
+  },
+
+  "duration": { "h": "{{n}} h", "min": "{{n}} min" },
+  "timeOfDay": {
+    "morning": "Morning",
+    "day": "Day",
+    "evening": "Evening",
+    "night": "Night"
+  },
+  "types": { "gym": "Gym", "box": "Boxing", "run": "Running" },
+  "set": {
+    "weightReps": "{{weight}} kg × {{reps}}",
+    "reps": "{{reps}} reps",
+    "countShort": "{{n}} sets"
   }
 }

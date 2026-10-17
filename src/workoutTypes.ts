@@ -1,5 +1,9 @@
 import type { WorkoutType } from "./types";
 import type { TimeOfDay } from "./types";
+import i18n from "./i18n";
+
+export const typeName = (type?: WorkoutType) =>
+  type ? i18n.t(`types.${type.id}`, { defaultValue: type.name }) : "";
 
 export const defaultTypes: WorkoutType[] = [
   { id: "gym", name: "Зал", color: "#2B59FF", hasExercises: true },

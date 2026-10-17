@@ -5,5 +5,33 @@
     "add": "Додати тренування",
     "summary": "Підсумок",
     "exercises": "Вправи"
+  },
+
+  "calendar": {
+    "noWorkoutsYet": "Тренувань ще немає",
+    "summary_one": "{{count}} тренування, {{duration}}",
+    "summary_few": "{{count}} тренування, {{duration}}",
+    "summary_many": "{{count}} тренувань, {{duration}}",
+    "summary_other": "{{count}} тренування, {{duration}}",
+    "prevMonth": "Попередній місяць",
+    "nextMonth": "Наступний місяць",
+    "noWorkouts": "У цей день тренувань немає",
+    "addWorkout": "+ Додати тренування",
+    "delete": "Видалити",
+    "confirmDelete": "Видалити це тренування?"
+  },
+
+  "duration": { "h": "{{n}} год", "min": "{{n}} хв" },
+  "timeOfDay": {
+    "morning": "Ранок",
+    "day": "День",
+    "evening": "Вечір",
+    "night": "Ніч"
+  },
+  "types": { "gym": "Зал", "box": "Бокс", "run": "Біг" },
+  "set": {
+    "weightReps": "{{weight}} кг × {{reps}}",
+    "reps": "{{reps}} повт.",
+    "countShort": "{{n}}п"
   }
 }
