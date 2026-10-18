@@ -1,6 +1,9 @@
 import style from "./exercisesContent.module.css";
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 import type { Workout } from "../../../../types";
 import { getExerciseSummaries } from "../../../../progress";
 import { fmtSet } from "../../../../format";
@@ -8,12 +11,14 @@ import { shortDate } from "../../../../date";
 
 type Props = { workouts: Workout[] };
 
-const ExircisesContent = ({ workouts }: Props) => {
+const ExercisesContent = ({ workouts }: Props) => {
+  const { t } = useTranslation();
   const [q, setQ] = useState("");
 
   const all = getExerciseSummaries(workouts);
   const query = q.trim().toLowerCase();
   const items = all.filter((e) => e.name.toLowerCase().includes(query));
+
   return (
     <section style={{ padding: "20px 20px 24px" }}>
       <div className={style.wrap}>
@@ -21,17 +26,17 @@ const ExircisesContent = ({ workouts }: Props) => {
           <input
             type="search"
             className={style.search}
-            placeholder="Знайти вправу"
+            placeholder={t("exercises.search")}
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            aria-label="Пошук вправи"
+            aria-label={t("exercises.searchLabel")}
           />
         )}
 
         {items.length > 0 ? (
           <>
             <h2 className={style.h2}>
-              Усі вправи <small>{items.length}</small>
+              {t("exercises.all")} <small>{items.length}</small>
             </h2>
             <div className={style.list}>
               {items.map((e) => (
@@ -43,8 +48,11 @@ const ExircisesContent = ({ workouts }: Props) => {
                   <span>
                     <strong>{e.name}</strong>
                     <small>
-                      Востаннє {shortDate(e.lastDate)}:{" "}
-                      {fmtSet(e.topWeight, e.topReps)}, {e.sets}п
+                      {t("exercises.last", {
+                        date: shortDate(e.lastDate),
+                        set: fmtSet(e.topWeight, e.topReps),
+                        n: e.sets,
+                      })}
                     </small>
                   </span>
                   <svg
@@ -60,9 +68,7 @@ const ExircisesContent = ({ workouts }: Props) => {
           </>
         ) : (
           <p className={style.empty}>
-            {all.length === 0
-              ? "Поки немає вправ. Запиши тренування із залу, і вони з'являться тут."
-              : "Такої вправи немає. Додай її в новому тренуванні, і вона з'явиться тут."}
+            {all.length === 0 ? t("exercises.empty") : t("exercises.notFound")}
           </p>
         )}
       </div>
@@ -70,4 +76,4 @@ const ExircisesContent = ({ workouts }: Props) => {
   );
 };
 
-export default ExircisesContent;
+export default ExercisesContent;

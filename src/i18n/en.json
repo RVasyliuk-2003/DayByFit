@@ -123,5 +123,16 @@
     "sets_one": "{{count}} set",
     "sets_other": "{{count}} sets",
     "setsShort": "{{n}}s"
+  },
+
+  "exercises": {
+    "title": "Exercises",
+    "subtitle": "Tap an exercise to see its progress",
+    "search": "Find an exercise",
+    "searchLabel": "Search exercises",
+    "all": "All exercises",
+    "last": "Last on {{date}}: {{set}}, {{n}}s",
+    "empty": "No exercises yet. Log a gym workout and they will show up here.",
+    "notFound": "No such exercise. Add it in a new workout and it will show up here."
   }
 }
