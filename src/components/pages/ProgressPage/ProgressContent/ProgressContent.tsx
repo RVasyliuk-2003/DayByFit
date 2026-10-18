@@ -50,94 +50,104 @@ const ProgressContent = ({ workouts, exercise }: Props) => {
   const periodLabel = t(`progress.${periodKey}`).toLowerCase();
 
   return (
-    <div className={style.wrap}>
-      <div className={style.seg} role="group" aria-label={t("progress.metric")}>
-        <button
-          type="button"
-          aria-pressed={metric === "main"}
-          onClick={() => setMetric("main")}
+    <section style={{ padding: "20px 20px 24px" }}>
+      <div className={style.wrap}>
+        <div
+          className={style.seg}
+          role="group"
+          aria-label={t("progress.metric")}
         >
-          {t(bodyweight ? "progress.reps" : "progress.weight")}
-        </button>
-        <button
-          type="button"
-          aria-pressed={metric === "sets"}
-          onClick={() => setMetric("sets")}
-        >
-          {t("progress.sets")}
-        </button>
-      </div>
-
-      <div className={style.card}>
-        {values.length === 0 && (
-          <h2 className={style.h2}>{t("progress.noRecords")}</h2>
-        )}
-
-        {values.length === 1 && (
-          <>
-            <h2 className={style.h2}>
-              {t("progress.now", { value: end, unit })}
-            </h2>
-            <p className={style.sub}>{t("progress.oneRecord")}</p>
-            <p className={style.hint}>{t("progress.needTwo")}</p>
-          </>
-        )}
-
-        {values.length > 1 && (
-          <>
-            <h2 className={style.h2}>
-              {t("progress.fromTo", { from: values[0], to: end, unit })}
-            </h2>
-            <p className={style.sub}>
-              {delta === 0 ? (
-                t("progress.noChange", { period: periodLabel })
-              ) : (
-                <>
-                  <strong>
-                    {delta > 0 ? "+" : "−"}
-                    {Math.abs(delta)} {unit}
-                  </strong>{" "}
-                  {t("progress.change", { period: periodLabel })}
-                </>
-              )}
-            </p>
-            <LineChart values={values} labels={labels} />
-          </>
-        )}
-      </div>
-
-      <div className={style.seg} role="group" aria-label={t("progress.period")}>
-        {PERIODS.map((p) => (
           <button
             type="button"
-            key={p.months}
-            aria-pressed={months === p.months}
-            onClick={() => setMonths(p.months)}
+            aria-pressed={metric === "main"}
+            onClick={() => setMetric("main")}
           >
-            {t(`progress.${p.key}`)}
+            {t(bodyweight ? "progress.reps" : "progress.weight")}
           </button>
-        ))}
-      </div>
+          <button
+            type="button"
+            aria-pressed={metric === "sets"}
+            onClick={() => setMetric("sets")}
+          >
+            {t("progress.sets")}
+          </button>
+        </div>
 
-      <div className={style.facts}>
-        <div>
-          <span>
-            {t(bodyweight ? "progress.maxReps" : "progress.maxWeight")}
-          </span>
-          <b>
-            {Math.max(...all.map(mainValue))} {mainUnit}
-          </b>
+        <div className={style.card}>
+          {values.length === 0 && (
+            <h2 className={style.h2}>{t("progress.noRecords")}</h2>
+          )}
+
+          {values.length === 1 && (
+            <>
+              <h2 className={style.h2}>
+                {t("progress.now", { value: end, unit })}
+              </h2>
+              <p className={style.sub}>{t("progress.oneRecord")}</p>
+              <p className={style.hint}>{t("progress.needTwo")}</p>
+            </>
+          )}
+
+          {values.length > 1 && (
+            <>
+              <h2 className={style.h2}>
+                {t("progress.fromTo", { from: values[0], to: end, unit })}
+              </h2>
+              <p className={style.sub}>
+                {delta === 0 ? (
+                  t("progress.noChange", { period: periodLabel })
+                ) : (
+                  <>
+                    <strong>
+                      {delta > 0 ? "+" : "−"}
+                      {Math.abs(delta)} {unit}
+                    </strong>{" "}
+                    {t("progress.change", { period: periodLabel })}
+                  </>
+                )}
+              </p>
+              <LineChart values={values} labels={labels} />
+            </>
+          )}
         </div>
-        <div>
-          <span>{t("progress.maxSets")}</span>
-          <b>{Math.max(...all.map((p) => p.sets))}</b>
+
+        <div
+          className={style.seg}
+          role="group"
+          aria-label={t("progress.period")}
+        >
+          {PERIODS.map((p) => (
+            <button
+              type="button"
+              key={p.months}
+              aria-pressed={months === p.months}
+              onClick={() => setMonths(p.months)}
+            >
+              {t(`progress.${p.key}`)}
+            </button>
+          ))}
         </div>
-        <div>
-          <span>{t("progress.total")}</span>
-          <b>{all.length}</b>
+
+        <div className={style.facts}>
+          <div>
+            <span>
+              {t(bodyweight ? "progress.maxReps" : "progress.maxWeight")}
+            </span>
+            <b>
+              {Math.max(...all.map(mainValue))} {mainUnit}
+            </b>
+          </div>
+          <div>
+            <span>{t("progress.maxSets")}</span>
+            <b>{Math.max(...all.map((p) => p.sets))}</b>
+          </div>
+          <div>
+            <span>{t("progress.total")}</span>
+            <b>{all.length}</b>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

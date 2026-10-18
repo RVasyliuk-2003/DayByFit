@@ -1,7 +1,7 @@
 .bar {
   display: flex;
-  justify-content: flex-end;
-  gap: 2px;
+  justify-content: space-between;
+  align-items: center;
   padding: 4px 8px 0;
 }
 
@@ -18,5 +18,23 @@
 .btn[aria-pressed="true"] {
   opacity: 1;
   color: var(--ink);
+  text-decoration: underline;
+}
+
+.langs {
+  display: flex;
+  gap: 2px;
+}
+
+.account {
+  padding: 4px 6px;
+  font: 600 11px var(--text);
+  color: var(--ink-2);
+  opacity: 0.7;
+  text-decoration: none;
+}
+
+.account:hover {
+  opacity: 1;
   text-decoration: underline;
 }

@@ -134,5 +134,22 @@
     "last": "Last on {{date}}: {{set}}, {{n}}s",
     "empty": "No exercises yet. Log a gym workout and they will show up here.",
     "notFound": "No such exercise. Add it in a new workout and it will show up here."
+  },
+
+  "account": {
+    "link": "Account",
+    "signInLink": "Sign in",
+    "title": "Account",
+    "subtitleOut": "Your data is saved in the cloud and available on all devices",
+    "signedAs": "Signed in as",
+    "email": "Email",
+    "password": "Password (6+ characters)",
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "toSignUp": "No account? Create one",
+    "toSignIn": "Already have an account? Sign in",
+    "signOut": "Sign out",
+    "checkEmail": "Check your inbox and confirm your email, then sign in.",
+    "working": "One moment…"
   }
 }

@@ -1,5 +1,6 @@
 import "./reset.css";
 import "./App.css";
+import AccountPage from "./components/pages/AccountPage/AccountPage";
 
 import CalendarPage from "./components/pages/CalendarPage/CalendarPage";
 import ProgressPage from "./components/pages/ProgressPage/ProgressPage";
@@ -22,6 +23,7 @@ const App = () => {
       <main className="mobileContainer">
         <LangSwitch />
         <Routes>
+          <Route path="/account" element={<AccountPage />} />
           <Route
             path="/"
             element={

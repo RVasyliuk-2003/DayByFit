@@ -1,14 +1,20 @@
 import style from "./langSwitch.module.css";
 
+import { Link } from "react-router-dom";
+import { useAuth } from "../../auth/authContext";
 import { useTranslation } from "react-i18next";
 
 const LANGS = ["uk", "en"] as const;
 
 const LangSwitch = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { user } = useAuth();
 
   return (
     <div className={style.bar} role="group" aria-label="Language">
+      <Link to="/account" className={style.account}>
+        {user ? t("account.link") : t("account.signInLink")}
+      </Link>
       {LANGS.map((lng) => (
         <button
           type="button"
