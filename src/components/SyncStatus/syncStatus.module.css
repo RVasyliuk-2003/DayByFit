@@ -1,0 +1,35 @@
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 20px 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(20, 33, 61, 0.08);
+  color: var(--ink);
+  font: 600 13px var(--text);
+}
+
+.error {
+  background: #fde8e6;
+  color: #9b1c12;
+}
+
+.error span {
+  flex: 1;
+}
+
+.bar button {
+  border: 0;
+  background: none;
+  color: inherit;
+  font: 700 13px var(--text);
+  text-decoration: underline;
+  padding: 4px;
+}
+
+.bar button:last-child {
+  text-decoration: none;
+  font-size: 18px;
+  line-height: 1;
+}

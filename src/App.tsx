@@ -13,15 +13,43 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useWorkouts } from "./useWorkouts";
 import { useWorkoutTypes } from "./useWorkoutTypes";
 import LangSwitch from "./components/LangSwitch/LangSwitch";
+import SyncStatus from "./components/SyncStatus/SyncStatus";
 
 const App = () => {
-  const { workouts, addWorkout, removeWorkout } = useWorkouts();
-  const { types, addType } = useWorkoutTypes();
+  const {
+    workouts,
+    addWorkout,
+    removeWorkout,
+    loading: wLoading,
+    error: wError,
+    retry: wRetry,
+    dismissError: wDismiss,
+  } = useWorkouts();
+  const {
+    types,
+    addType,
+    loading: tLoading,
+    error: tError,
+    retry: tRetry,
+    dismissError: tDismiss,
+  } = useWorkoutTypes();
 
   return (
     <BrowserRouter>
       <main className="mobileContainer">
         <LangSwitch />
+        <SyncStatus
+          loading={wLoading || tLoading}
+          error={wError || tError}
+          onRetry={() => {
+            wRetry();
+            tRetry();
+          }}
+          onDismiss={() => {
+            wDismiss();
+            tDismiss();
+          }}
+        />
         <Routes>
           <Route path="/account" element={<AccountPage />} />
           <Route

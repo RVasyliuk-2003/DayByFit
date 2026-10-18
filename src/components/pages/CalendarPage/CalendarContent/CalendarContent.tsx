@@ -23,7 +23,6 @@ const CalendarContent = ({
 }: Props) => {
   const { t } = useTranslation();
 
-
   const selectedKey = toDateKey(selectedDate);
   const dayWorkouts = workouts.filter((w) => w.date === selectedKey);
 
@@ -70,7 +69,7 @@ const CalendarContent = ({
       )}
 
       <Link to={`/add?date=${selectedKey}`} className={style.addLink}>
-        + {t("calendar.addWorkout")}
+        {t("calendar.addWorkout")}
       </Link>
     </section>
   );

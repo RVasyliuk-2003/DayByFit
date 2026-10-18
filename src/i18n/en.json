@@ -151,5 +151,12 @@
     "signOut": "Sign out",
     "checkEmail": "Check your inbox and confirm your email, then sign in.",
     "working": "One moment…"
+  },
+
+  "sync": {
+    "loading": "Loading your data…",
+    "error": "Couldn't reach the cloud. Your changes may not have been saved.",
+    "retry": "Retry",
+    "close": "Close"
   }
 }
