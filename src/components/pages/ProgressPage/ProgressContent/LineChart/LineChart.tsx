@@ -1,4 +1,5 @@
 import style from "./lineChart.module.css";
+import { useTranslation } from "react-i18next";
 
 type Props = { values: number[]; labels: string[] };
 
@@ -10,6 +11,7 @@ const PT = 22;
 const PB = 28;
 
 const LineChart = ({ values, labels }: Props) => {
+  const { t } = useTranslation();
   const n = values.length;
   const min = Math.min(...values);
   const max = Math.max(...values);
@@ -35,7 +37,7 @@ const LineChart = ({ values, labels }: Props) => {
       className={style.chart}
       viewBox={`0 0 ${W} ${H}`}
       role="img"
-      aria-label="Графік прогресу"
+      aria-label={t("progress.chart")}
     >
       {ticks.map((t) => (
         <g key={t}>

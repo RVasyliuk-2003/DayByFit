@@ -56,5 +56,35 @@
     "newTypeColor": "Color {{color}}",
     "newTypeHasExercises": "Log exercises and sets",
     "newTypeAdd": "Add type"
+  },
+
+  "progress": {
+    "title": "Progress",
+    "subtitle": "Any exercise over the chosen period",
+    "exercise": "Exercise",
+    "empty": "No exercises yet. Log a gym workout and your progress will show up here.",
+    "metric": "What to show",
+    "weight": "Weight",
+    "reps": "Reps",
+    "sets": "Sets",
+    "period": "Period",
+    "months3": "3 months",
+    "months6": "6 months",
+    "months12": "1 year",
+    "noRecords": "No records for this period",
+    "now": "Now {{value}} {{unit}}",
+    "oneRecord": "One record for this period",
+    "needTwo": "The chart appears once you have at least two workouts with this exercise.",
+    "fromTo": "From {{from}} to {{to}} {{unit}}",
+    "noChange": "No change in {{period}}",
+    "change": "in {{period}}",
+    "maxWeight": "Top weight",
+    "maxReps": "Most reps",
+    "maxSets": "Most sets",
+    "total": "Workouts with this exercise",
+    "unitKg": "kg",
+    "unitReps": "reps",
+    "unitSets": "sets",
+    "chart": "Progress chart"
   }
 }

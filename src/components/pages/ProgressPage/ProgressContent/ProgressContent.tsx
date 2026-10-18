@@ -1,6 +1,8 @@
 import style from "./progressContent.module.css";
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
 import type { Workout } from "../../../../types";
 import { toDateKey, shortDate } from "../../../../date";
 import { getExerciseHistory, type ExercisePoint } from "../../../../progress";
@@ -9,21 +11,18 @@ import LineChart from "./LineChart/LineChart";
 type Props = { workouts: Workout[]; exercise: string };
 
 const PERIODS = [
-  { months: 3, label: "3 місяці" },
-  { months: 6, label: "6 місяців" },
-  { months: 12, label: "Рік" },
-];
+  { months: 3, key: "months3" },
+  { months: 6, key: "months6" },
+  { months: 12, key: "months12" },
+] as const;
 
 const ProgressContent = ({ workouts, exercise }: Props) => {
+  const { t } = useTranslation();
   const [metric, setMetric] = useState<"main" | "sets">("main");
   const [months, setMonths] = useState(6);
 
   if (!exercise) {
-    return (
-      <p className={style.empty}>
-        Поки немає вправ. Запиши тренування із залу, і тут з'явиться прогрес.
-      </p>
-    );
+    return <p className={style.empty}>{t("progress.empty")}</p>;
   }
 
   const { points: all, bodyweight } = getExerciseHistory(workouts, exercise);
@@ -39,107 +38,106 @@ const ProgressContent = ({ workouts, exercise }: Props) => {
   const value = (p: ExercisePoint) =>
     metric === "main" ? mainValue(p) : p.sets;
 
-  const mainUnit = bodyweight ? "повт." : "кг";
-  const unit = metric === "sets" ? "підх." : mainUnit;
+  const mainUnit = t(bodyweight ? "progress.unitReps" : "progress.unitKg");
+  const unit = metric === "sets" ? t("progress.unitSets") : mainUnit;
 
   const values = points.map(value);
   const labels = points.map((p) => shortDate(p.date));
   const end = values[values.length - 1];
   const delta = values.length > 1 ? end - values[0] : 0;
-  const periodLabel = PERIODS.find((p) => p.months === months)?.label;
+
+  const periodKey = PERIODS.find((p) => p.months === months)?.key ?? "months6";
+  const periodLabel = t(`progress.${periodKey}`).toLowerCase();
 
   return (
-    <section style={{ padding: "20px 20px 24px" }}>
-      <div className={style.wrap}>
-        <div className={style.seg} role="group" aria-label="Що показувати">
+    <div className={style.wrap}>
+      <div className={style.seg} role="group" aria-label={t("progress.metric")}>
+        <button
+          type="button"
+          aria-pressed={metric === "main"}
+          onClick={() => setMetric("main")}
+        >
+          {t(bodyweight ? "progress.reps" : "progress.weight")}
+        </button>
+        <button
+          type="button"
+          aria-pressed={metric === "sets"}
+          onClick={() => setMetric("sets")}
+        >
+          {t("progress.sets")}
+        </button>
+      </div>
+
+      <div className={style.card}>
+        {values.length === 0 && (
+          <h2 className={style.h2}>{t("progress.noRecords")}</h2>
+        )}
+
+        {values.length === 1 && (
+          <>
+            <h2 className={style.h2}>
+              {t("progress.now", { value: end, unit })}
+            </h2>
+            <p className={style.sub}>{t("progress.oneRecord")}</p>
+            <p className={style.hint}>{t("progress.needTwo")}</p>
+          </>
+        )}
+
+        {values.length > 1 && (
+          <>
+            <h2 className={style.h2}>
+              {t("progress.fromTo", { from: values[0], to: end, unit })}
+            </h2>
+            <p className={style.sub}>
+              {delta === 0 ? (
+                t("progress.noChange", { period: periodLabel })
+              ) : (
+                <>
+                  <strong>
+                    {delta > 0 ? "+" : "−"}
+                    {Math.abs(delta)} {unit}
+                  </strong>{" "}
+                  {t("progress.change", { period: periodLabel })}
+                </>
+              )}
+            </p>
+            <LineChart values={values} labels={labels} />
+          </>
+        )}
+      </div>
+
+      <div className={style.seg} role="group" aria-label={t("progress.period")}>
+        {PERIODS.map((p) => (
           <button
             type="button"
-            aria-pressed={metric === "main"}
-            onClick={() => setMetric("main")}
+            key={p.months}
+            aria-pressed={months === p.months}
+            onClick={() => setMonths(p.months)}
           >
-            {bodyweight ? "Повтори" : "Вага"}
+            {t(`progress.${p.key}`)}
           </button>
-          <button
-            type="button"
-            aria-pressed={metric === "sets"}
-            onClick={() => setMetric("sets")}
-          >
-            Підходи
-          </button>
+        ))}
+      </div>
+
+      <div className={style.facts}>
+        <div>
+          <span>
+            {t(bodyweight ? "progress.maxReps" : "progress.maxWeight")}
+          </span>
+          <b>
+            {Math.max(...all.map(mainValue))} {mainUnit}
+          </b>
         </div>
-
-        <div className={style.card}>
-          {values.length === 0 && (
-            <h2 className={style.h2}>За цей період записів немає</h2>
-          )}
-
-          {values.length === 1 && (
-            <>
-              <h2 className={style.h2}>
-                Зараз {end} {unit}
-              </h2>
-              <p className={style.sub}>Один запис за цей період</p>
-              <p className={style.hint}>
-                Графік з'явиться, коли буде хоча б два тренування з цією
-                вправою.
-              </p>
-            </>
-          )}
-
-          {values.length > 1 && (
-            <>
-              <h2 className={style.h2}>
-                З {values[0]} до {end} {unit}
-              </h2>
-              <p className={style.sub}>
-                {delta === 0 ? (
-                  `Без змін за ${periodLabel}`
-                ) : (
-                  <>
-                    <strong>
-                      {delta > 0 ? "+" : "−"}
-                      {Math.abs(delta)} {unit}
-                    </strong>{" "}
-                    за {periodLabel}
-                  </>
-                )}
-              </p>
-              <LineChart values={values} labels={labels} />
-            </>
-          )}
+        <div>
+          <span>{t("progress.maxSets")}</span>
+          <b>{Math.max(...all.map((p) => p.sets))}</b>
         </div>
-
-        <div className={style.seg} role="group" aria-label="Період">
-          {PERIODS.map((p) => (
-            <button
-              type="button"
-              key={p.months}
-              aria-pressed={months === p.months}
-              onClick={() => setMonths(p.months)}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
-
-        <div className={style.facts}>
-          <div>
-            <span>{bodyweight ? "Найбільше повторів" : "Найбільша вага"}</span>
-            <b>
-              {Math.max(...all.map(mainValue))} {mainUnit}
-            </b>
-          </div>
-          <div>
-            <span>Найбільше підходів</span>
-            <b>{Math.max(...all.map((p) => p.sets))}</b>
-          </div>
-          <div>
-            <span>Тренувань з цією вправою</span>
-            <b>{all.length}</b>
-          </div>
+        <div>
+          <span>{t("progress.total")}</span>
+          <b>{all.length}</b>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
