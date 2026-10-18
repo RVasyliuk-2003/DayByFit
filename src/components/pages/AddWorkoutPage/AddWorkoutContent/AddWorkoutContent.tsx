@@ -1,16 +1,18 @@
 import style from "./addWorkoutContent.module.css";
 
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 import type {
   TimeOfDay,
   Workout,
   Exercise,
   WorkoutType,
 } from "../../../../types";
-import { toDateKey, fmtDur, parseDateKey } from "../../../../date";
-
-import { getType, typeColors } from "../../../../workoutTypes";
+import { fmtDur } from "../../../../date";
+import { getType, typeColors, typeName } from "../../../../workoutTypes";
+import { useWorkoutDate } from "../../../../useWorkoutDate";
 
 type Props = {
   onAdd: (workout: Workout) => void;
@@ -18,12 +20,7 @@ type Props = {
   onAddType: (type: WorkoutType) => void;
 };
 
-const timeLabels: Record<TimeOfDay, string> = {
-  morning: "Ранок",
-  day: "День",
-  evening: "Вечір",
-  night: "Ніч",
-};
+const timesOfDay: TimeOfDay[] = ["morning", "day", "evening", "night"];
 
 const emptyExercise = (): Exercise => ({
   name: "",
@@ -32,21 +29,21 @@ const emptyExercise = (): Exercise => ({
 
 const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { dateKey: date } = useWorkoutDate();
 
   const [typeId, setTypeId] = useState("gym");
   const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>("evening");
   const [durationMin, setDurationMin] = useState(60);
-  const [searchParams] = useSearchParams();
-  const dateObj = parseDateKey(searchParams.get("date")) ?? new Date();
-  const date = toDateKey(dateObj);
-
-  const dateLabel = new Intl.DateTimeFormat("uk-UA", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  }).format(dateObj);
   const [note, setNote] = useState("");
   const [exercises, setExercises] = useState<Exercise[]>([emptyExercise()]);
+
+  const [creating, setCreating] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newColor, setNewColor] = useState(typeColors[0]);
+  const [newHasExercises, setNewHasExercises] = useState(false);
+
+  const type = getType(types, typeId);
 
   const addExercise = () => setExercises((prev) => [...prev, emptyExercise()]);
 
@@ -95,6 +92,24 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
       ),
     );
 
+  const createType = () => {
+    const name = newName.trim();
+    if (!name) return;
+
+    const created: WorkoutType = {
+      id: crypto.randomUUID(),
+      name,
+      color: newColor,
+      hasExercises: newHasExercises,
+    };
+
+    onAddType(created);
+    setTypeId(created.id);
+    setCreating(false);
+    setNewName("");
+    setNewHasExercises(false);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -119,37 +134,10 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
     navigate(`/?date=${date}`);
   };
 
-  const [creating, setCreating] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [newColor, setNewColor] = useState(typeColors[0]);
-  const [newHasExercises, setNewHasExercises] = useState(false);
-
-  const type = getType(types, typeId);
-
-  const createType = () => {
-    const name = newName.trim();
-    if (!name) return;
-
-    const created: WorkoutType = {
-      id: crypto.randomUUID(),
-      name,
-      color: newColor,
-      hasExercises: newHasExercises,
-    };
-
-    onAddType(created);
-    setTypeId(created.id);
-    setCreating(false);
-    setNewName("");
-    setNewHasExercises(false);
-  };
-
   return (
     <section>
       <form onSubmit={handleSubmit} className={style.form_main}>
-        <p className={style.dateLine}>{dateLabel}</p>
-
-        <span className={style.lbl}>Що тренував</span>
+        <span className={style.lbl}>{t("form.type")}</span>
         <div className={style.flexWrap}>
           {types.map((ell) => (
             <button
@@ -160,7 +148,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
               onClick={() => setTypeId(ell.id)}
               aria-pressed={typeId === ell.id}
             >
-              {ell.name}
+              {typeName(ell)}
             </button>
           ))}
           <button
@@ -169,7 +157,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
             onClick={() => setCreating(!creating)}
             aria-expanded={creating}
           >
-            + Свій тип
+            {t("form.newType")}
           </button>
         </div>
 
@@ -177,7 +165,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
           <div className={style.newType}>
             <input
               className={style.newTypeName}
-              placeholder="Назва (напр. Біг)"
+              placeholder={t("form.newTypeName")}
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               onKeyDown={(e) => {
@@ -197,7 +185,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
                   style={{ background: c }}
                   onClick={() => setNewColor(c)}
                   aria-pressed={newColor === c}
-                  aria-label={`Колір ${c}`}
+                  aria-label={t("form.newTypeColor", { color: c })}
                 />
               ))}
             </div>
@@ -208,7 +196,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
                 checked={newHasExercises}
                 onChange={(e) => setNewHasExercises(e.target.checked)}
               />
-              Записувати вправи й підходи
+              {t("form.newTypeHasExercises")}
             </label>
 
             <button
@@ -216,14 +204,14 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
               className={style.add_btn}
               onClick={createType}
             >
-              Додати тип
+              {t("form.newTypeAdd")}
             </button>
           </div>
         )}
 
-        <span className={style.lbl}>Коли</span>
+        <span className={style.lbl}>{t("form.when")}</span>
         <div className={style.day_box}>
-          {(Object.keys(timeLabels) as TimeOfDay[]).map((key) => (
+          {timesOfDay.map((key) => (
             <button
               type="button"
               key={key}
@@ -231,16 +219,17 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
               onClick={() => setTimeOfDay(key)}
               aria-pressed={timeOfDay === key}
             >
-              {timeLabels[key]}
+              {t(`timeOfDay.${key}`)}
             </button>
           ))}
         </div>
 
-        <span className={style.lbl}>Скільки тривало</span>
+        <span className={style.lbl}>{t("form.duration")}</span>
         <div className={style.time_box}>
           <button
             type="button"
             className={style.time_btn}
+            aria-label={t("form.durationLess")}
             onClick={() => setDurationMin(Math.max(15, durationMin - 15))}
           >
             -
@@ -249,6 +238,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
           <button
             type="button"
             className={style.time_btn}
+            aria-label={t("form.durationMore")}
             onClick={() => setDurationMin(durationMin + 15)}
           >
             +
@@ -257,14 +247,14 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
 
         {type?.hasExercises ? (
           <div className={style.exercises}>
-            <span className={style.lbl}>Вправи</span>
+            <span className={style.lbl}>{t("form.exercises")}</span>
 
             {exercises.map((ex, i) => (
               <div key={i} className={style.exercise}>
                 <div className={style.exHead}>
                   <input
                     className={style.exName}
-                    placeholder="Назва вправи"
+                    placeholder={t("form.exerciseName")}
                     value={ex.name}
                     onChange={(e) => renameExercise(i, e.target.value)}
                   />
@@ -274,7 +264,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
                       type="button"
                       className={style.btn_close}
                       onClick={() => removeExercise(i)}
-                      aria-label="Видалити вправу"
+                      aria-label={t("form.removeExercise")}
                     >
                       ×
                     </button>
@@ -288,7 +278,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
                       className={style.inpt_set}
                       type="number"
                       inputMode="decimal"
-                      placeholder="кг"
+                      placeholder={t("form.weightPlaceholder")}
                       value={s.weight || ""}
                       onChange={(e) =>
                         updateSet(i, j, "weight", Number(e.target.value))
@@ -299,7 +289,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
                       className={style.inpt_set}
                       type="number"
                       inputMode="numeric"
-                      placeholder="повт."
+                      placeholder={t("form.repsPlaceholder")}
                       value={s.reps || ""}
                       onChange={(e) =>
                         updateSet(i, j, "reps", Number(e.target.value))
@@ -309,7 +299,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
                       type="button"
                       className={style.iconBtn}
                       onClick={() => removeSet(i, j)}
-                      aria-label="Видалити підхід"
+                      aria-label={t("form.removeSet")}
                     >
                       ×
                     </button>
@@ -321,7 +311,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
                   className={style.add_btn}
                   onClick={() => addSet(i)}
                 >
-                  Додати підхід
+                  {t("form.addSet")}
                 </button>
               </div>
             ))}
@@ -331,12 +321,12 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
               className={style.add_btn}
               onClick={addExercise}
             >
-              Додати вправу
+              {t("form.addExercise")}
             </button>
           </div>
         ) : (
           <label>
-            <span className={style.lbl}>Нотатка</span>
+            <span className={style.lbl}>{t("form.note")}</span>
             <textarea
               className={style.note}
               value={note}
@@ -346,7 +336,7 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
         )}
 
         <button type="submit" className={style.save_btn}>
-          Зберегти тренування
+          {t("form.save")}
         </button>
       </form>
     </section>

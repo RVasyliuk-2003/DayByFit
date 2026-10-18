@@ -33,5 +33,30 @@
     "weightReps": "{{weight}} кг × {{reps}}",
     "reps": "{{reps}} повт.",
     "countShort": "{{n}}п"
+  },
+
+  "form": {
+    "title": "Нове тренування",
+    "today": "Сьогодні",
+    "type": "Що тренував",
+    "when": "Коли",
+    "duration": "Скільки тривало",
+    "durationLess": "Менше на 15 хвилин",
+    "durationMore": "Більше на 15 хвилин",
+    "exercises": "Вправи",
+    "exerciseName": "Назва вправи",
+    "weightPlaceholder": "кг",
+    "repsPlaceholder": "повт.",
+    "removeExercise": "Видалити вправу",
+    "removeSet": "Видалити підхід",
+    "addSet": "+ підхід",
+    "addExercise": "+ Додати вправу",
+    "note": "Нотатка",
+    "save": "Зберегти тренування",
+    "newType": "+ Свій тип",
+    "newTypeName": "Назва (напр. Біг)",
+    "newTypeColor": "Колір {{color}}",
+    "newTypeHasExercises": "Записувати вправи й підходи",
+    "newTypeAdd": "Додати тип"
   }
 }

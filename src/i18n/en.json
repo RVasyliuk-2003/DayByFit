@@ -31,5 +31,30 @@
     "weightReps": "{{weight}} kg × {{reps}}",
     "reps": "{{reps}} reps",
     "countShort": "{{n}} sets"
+  },
+
+  "form": {
+    "title": "New workout",
+    "today": "Today",
+    "type": "What did you train",
+    "when": "When",
+    "duration": "How long",
+    "durationLess": "15 minutes less",
+    "durationMore": "15 minutes more",
+    "exercises": "Exercises",
+    "exerciseName": "Exercise name",
+    "weightPlaceholder": "kg",
+    "repsPlaceholder": "reps",
+    "removeExercise": "Remove exercise",
+    "removeSet": "Remove set",
+    "addSet": "+ set",
+    "addExercise": "+ Add exercise",
+    "note": "Note",
+    "save": "Save workout",
+    "newType": "+ Custom type",
+    "newTypeName": "Name (e.g. Running)",
+    "newTypeColor": "Color {{color}}",
+    "newTypeHasExercises": "Log exercises and sets",
+    "newTypeAdd": "Add type"
   }
 }
