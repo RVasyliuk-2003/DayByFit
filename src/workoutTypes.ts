@@ -1,5 +1,5 @@
 import type { WorkoutType } from "./types";
-import type { TimeOfDay } from "./types";
+// import type { TimeOfDay } from "./types";
 import i18n from "./i18n";
 
 export const typeName = (type?: WorkoutType) =>
@@ -11,12 +11,12 @@ export const defaultTypes: WorkoutType[] = [
   { id: "run", name: "Біг", color: "#15803D", hasExercises: false },
 ];
 
-export const timeLabels: Record<TimeOfDay, string> = {
-  morning: "Ранок",
-  day: "День",
-  evening: "Вечір",
-  night: "Ніч",
-};
+// export const timeLabels: Record<TimeOfDay, string> = {
+//   morning: "Ранок",
+//   day: "День",
+//   evening: "Вечір",
+//   night: "Ніч",
+// };
 
 export const getType = (types: WorkoutType[], id: string) =>
   types.find((t) => t.id === id);

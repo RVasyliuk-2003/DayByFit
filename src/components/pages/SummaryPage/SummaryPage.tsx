@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { Workout, WorkoutType } from "../../../types";
 import { toDateKey } from "../../../date";
 import { getRange, getRows, getSubtitle, type Period } from "../../../summary";
@@ -8,6 +9,7 @@ import SummaryContent from "./SummaryContent/SummaryContent";
 type Props = { workouts: Workout[]; types: WorkoutType[] };
 
 const SummaryPage = ({ workouts, types }: Props) => {
+  useTranslation();
   const today = toDateKey(new Date());
 
   const [period, setPeriod] = useState<Period>("month");

@@ -1,7 +1,9 @@
+import i18n from "./i18n";
+import { getLocale } from "./i18n/locale";
 import type { TimeOfDay, Workout, WorkoutType } from "./types";
 import { toDateKey, shortDate } from "./date";
-import { getType, timeLabels } from "./workoutTypes";
-import { fmtSet, plural, topSet } from "./format";
+import { getType, typeName } from "./workoutTypes";
+import { fmtSet, topSet } from "./format";
 
 export type Period = "week" | "month" | "all" | "custom";
 
@@ -9,7 +11,7 @@ const todOrder: TimeOfDay[] = ["morning", "day", "evening", "night"];
 
 const fullDate = (key: string) => key.split("-").reverse().join(".");
 
-// null — період некоректний (немає дат або «від» пізніше за «до»)
+// null означає, що період некоректний (немає дат або «від» пізніше за «до»)
 export const getRange = (
   period: Period,
   from: string,
@@ -40,15 +42,17 @@ export const getSubtitle = (
   to: string,
   today = new Date(),
 ) => {
-  if (period === "week") return "Останні 7 днів";
-  if (period === "all") return "Весь час";
+  if (period === "week") return i18n.t("summary.last7");
+  if (period === "all") return i18n.t("summary.all");
   if (period === "month") {
-    const name = new Intl.DateTimeFormat("uk-UA", { month: "long" }).format(
-      today,
-    );
+    const name = new Intl.DateTimeFormat(getLocale(i18n.language), {
+      month: "long",
+    }).format(today);
     return `${name[0].toUpperCase()}${name.slice(1)} ${today.getFullYear()}`;
   }
-  return from && to ? `${shortDate(from)} – ${shortDate(to)}` : "Обери період";
+  return from && to
+    ? `${shortDate(from)} – ${shortDate(to)}`
+    : i18n.t("summary.pickPeriod");
 };
 
 // від старих до нових
@@ -91,7 +95,7 @@ export const shortDetails = (w: Workout) => {
   if (w.exercises && w.exercises.length > 0) {
     const e = w.exercises.length;
     const s = w.exercises.reduce((sum, ex) => sum + ex.sets.length, 0);
-    return `${e} ${plural(e, "вправа", "вправи", "вправ")}, ${s} ${plural(s, "підхід", "підходи", "підходів")}`;
+    return `${i18n.t("summary.exercises", { count: e })}, ${i18n.t("summary.sets", { count: s })}`;
   }
   return w.note ?? "";
 };
@@ -103,7 +107,7 @@ const fullDetails = (w: Workout) => {
       .map((ex) => {
         if (ex.sets.length === 0) return ex.name;
         const top = topSet(ex.sets);
-        return `${ex.name} ${fmtSet(top.weight, top.reps)} (${ex.sets.length}п)`;
+        return `${ex.name} ${fmtSet(top.weight, top.reps)} (${i18n.t("summary.setsShort", { n: ex.sets.length })})`;
       })
       .join(", ");
   }
@@ -114,14 +118,23 @@ export const buildTable = (
   rows: Workout[],
   types: WorkoutType[],
 ): string[][] => [
-  ["Дата", "Тип", "Період доби", "Тривалість, хв", "Деталі"],
-  ...rows.map((w) => [
-    fullDate(w.date),
-    getType(types, w.typeId)?.name ?? "—",
-    timeLabels[w.timeOfDay],
-    String(w.durationMin),
-    fullDetails(w),
-  ]),
+  [
+    i18n.t("summary.colDate"),
+    i18n.t("summary.colType"),
+    i18n.t("summary.csvTime"),
+    i18n.t("summary.csvDuration"),
+    i18n.t("summary.colDetails"),
+  ],
+  ...rows.map((w) => {
+    const type = getType(types, w.typeId);
+    return [
+      fullDate(w.date),
+      type ? typeName(type) : "—",
+      i18n.t(`timeOfDay.${w.timeOfDay}`),
+      String(w.durationMin),
+      fullDetails(w),
+    ];
+  }),
 ];
 
 // ; як роздільник і BOM, щоб Excel з українськими налаштуваннями відкрив правильно

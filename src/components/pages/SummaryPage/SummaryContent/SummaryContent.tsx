@@ -1,10 +1,11 @@
 import style from "./summaryContent.module.css";
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
 import type { Workout, WorkoutType } from "../../../../types";
 import { fmtDur, toDateKey, shortDate } from "../../../../date";
-import { plural } from "../../../../format";
-import { getType, timeLabels } from "../../../../workoutTypes";
+import { getType, typeName } from "../../../../workoutTypes";
 import {
   buildTable,
   getStats,
@@ -26,12 +27,7 @@ type Props = {
   types: WorkoutType[];
 };
 
-const PERIODS: { value: Period; label: string }[] = [
-  { value: "week", label: "Тиждень" },
-  { value: "month", label: "Місяць" },
-  { value: "all", label: "Весь час" },
-  { value: "custom", label: "Період" },
-];
+const PERIODS: Period[] = ["week", "month", "all", "custom"];
 
 const MAX_ROWS = 8;
 
@@ -46,6 +42,7 @@ const SummaryContent = ({
   invalid,
   types,
 }: Props) => {
+  const { t } = useTranslation();
   const [message, setMessage] = useState("");
 
   const showMessage = (text: string) => {
@@ -68,36 +65,40 @@ const SummaryContent = ({
     a.download = `daybyfit-${todayKey}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    showMessage("Файл збережено");
+    showMessage(t("summary.saved"));
   };
 
   const handleShare = async () => {
     const text = toTsv(buildTable(rows, types));
     try {
       if (navigator.share) {
-        await navigator.share({ title: "Мої тренування", text });
+        await navigator.share({ title: t("summary.shareTitle"), text });
       } else {
         await navigator.clipboard.writeText(text);
-        showMessage("Таблицю скопійовано");
+        showMessage(t("summary.copied"));
       }
     } catch (e) {
       if (e instanceof DOMException && e.name === "AbortError") return; // сам закрив вікно
-      showMessage("Не вдалося поділитись. Спробуй зберегти як CSV");
+      showMessage(t("summary.shareFailed"));
     }
   };
 
   return (
     <section style={{ padding: "20px 20px 24px" }}>
       <div className={style.wrap}>
-        <div className={style.seg} role="group" aria-label="Період підсумку">
+        <div
+          className={style.seg}
+          role="group"
+          aria-label={t("summary.periodLabel")}
+        >
           {PERIODS.map((p) => (
             <button
               type="button"
-              key={p.value}
-              aria-pressed={period === p.value}
-              onClick={() => onPeriod(p.value)}
+              key={p}
+              aria-pressed={period === p}
+              onClick={() => onPeriod(p)}
             >
-              {p.label}
+              {t(`summary.${p}`)}
             </button>
           ))}
         </div>
@@ -105,7 +106,7 @@ const SummaryContent = ({
         {period === "custom" && (
           <div className={style.range}>
             <label>
-              Від
+              {t("summary.from")}
               <input
                 type="date"
                 value={from}
@@ -114,7 +115,7 @@ const SummaryContent = ({
               />
             </label>
             <label>
-              До
+              {t("summary.to")}
               <input
                 type="date"
                 value={to}
@@ -133,36 +134,36 @@ const SummaryContent = ({
                   key={type.id}
                   style={{ flex: count, background: type.color }}
                 >
-                  {type.name} {count}
+                  {typeName(type)} {count}
                 </div>
               ))}
             </div>
 
             <div className={style.two}>
               <div>
-                <span>Разом часу</span>
+                <span>{t("summary.totalTime")}</span>
                 <strong>{fmtDur(stats.totalMin)}</strong>
               </div>
               <div>
                 <span>
-                  {rows.length}{" "}
-                  {plural(rows.length, "тренування", "тренування", "тренувань")}
-                  , найчастіше
+                  {t("summary.workoutsOften", { count: rows.length })}
                 </span>
                 <strong>
-                  {stats.topTod ? timeLabels[stats.topTod].toLowerCase() : "—"}
+                  {stats.topTod
+                    ? t(`timeOfDay.${stats.topTod}`).toLowerCase()
+                    : "—"}
                 </strong>
               </div>
             </div>
 
-            <h2 className={style.h2}>Таблиця для надсилання</h2>
+            <h2 className={style.h2}>{t("summary.tableTitle")}</h2>
             <table className={style.tbl}>
               <thead>
                 <tr>
-                  <th>Дата</th>
-                  <th>Тип</th>
-                  <th>Час</th>
-                  <th>Деталі</th>
+                  <th>{t("summary.colDate")}</th>
+                  <th>{t("summary.colType")}</th>
+                  <th>{t("summary.colTime")}</th>
+                  <th>{t("summary.colDetails")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -176,7 +177,7 @@ const SummaryContent = ({
                           className={style.chip}
                           style={{ background: type?.color }}
                         >
-                          {type?.name}
+                          {type ? typeName(type) : "—"}
                         </span>
                       </td>
                       <td>{fmtDur(w.durationMin)}</td>
@@ -188,15 +189,13 @@ const SummaryContent = ({
             </table>
             {rows.length > MAX_ROWS && (
               <p className={style.more}>
-                Показано {MAX_ROWS} із {rows.length}. У файлі будуть усі.
+                {t("summary.shown", { shown: MAX_ROWS, total: rows.length })}
               </p>
             )}
           </>
         ) : (
           <p className={style.empty}>
-            {invalid
-              ? "Обери обидві дати: початок має бути не пізніше за кінець."
-              : "За цей період тренувань немає."}
+            {invalid ? t("summary.invalid") : t("summary.noWorkouts")}
           </p>
         )}
 
@@ -207,7 +206,7 @@ const SummaryContent = ({
             onClick={handleShare}
             disabled={!hasRows}
           >
-            Поділитись таблицею
+            {t("summary.share")}
           </button>
           <button
             type="button"
@@ -215,7 +214,7 @@ const SummaryContent = ({
             onClick={handleCsv}
             disabled={!hasRows}
           >
-            Зберегти як CSV
+            {t("summary.saveCsv")}
           </button>
         </div>
 
