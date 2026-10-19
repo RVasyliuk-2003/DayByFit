@@ -2,7 +2,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const LLM_URL = Deno.env.get("LLM_BASE_URL") ?? "https://api.groq.com/openai/v1";
-const LLM_MODEL = Deno.env.get("LLM_MODEL") ?? "llama-3.3-70b-versatile";
+const LLM_MODEL = Deno.env.get("LLM_MODEL") ?? "openai/gpt-oss-120b";
 
 // те, що можна підкручувати
 const DAILY_LIMIT = 30; // повідомлень на користувача за 24 години
@@ -202,10 +202,12 @@ Deno.serve(async (req) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${Deno.env.get("LLM_API_KEY")}`,
     },
-    body: JSON.stringify({
+      body: JSON.stringify({
       model: LLM_MODEL,
       temperature: 0.6,
-      max_tokens: 700,
+      max_tokens: 1500,
+      // для reasoning-моделей: менше «роздумів», швидша й дешевша відповідь
+      ...(LLM_MODEL.includes("gpt-oss") ? { reasoning_effort: "low" } : {}),
       messages: [
         { role: "system", content: systemPrompt(today, context) },
         ...history,

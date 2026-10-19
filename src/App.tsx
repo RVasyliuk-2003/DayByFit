@@ -15,6 +15,7 @@ import { useWorkoutTypes } from "./useWorkoutTypes";
 import LangSwitch from "./components/LangSwitch/LangSwitch";
 import SyncStatus from "./components/SyncStatus/SyncStatus";
 import { getExerciseNames } from "./progress";
+import Coach from "./components/Coach/Coach";
 
 const App = () => {
   const {
@@ -89,6 +90,7 @@ const App = () => {
         </Routes>
       </main>
       <NavBar />
+      <Coach />
     </BrowserRouter>
   );
 };

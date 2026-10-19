@@ -158,5 +158,22 @@
     "error": "Couldn't reach the cloud. Your changes may not have been saved.",
     "retry": "Retry",
     "close": "Close"
+  },
+
+  "coach": {
+    "open": "Open AI coach",
+    "close": "Close",
+    "title": "AI coach",
+    "subtitle": "Sees your workouts. Not a doctor, advice is approximate.",
+    "intro": "Hi! I can see your workout log. Ask about progress, load or a plan.",
+    "s1": "Analyze my last week",
+    "s2": "What should I train next?",
+    "s3": "Where am I not progressing?",
+    "placeholder": "Type a message…",
+    "send": "Send",
+    "typing": "Coach is typing…",
+    "failed": "Couldn't get a reply. Please try again.",
+    "limit": "Daily message limit reached. Come back tomorrow.",
+    "loadFailed": "Couldn't load chat history."
   }
 }
