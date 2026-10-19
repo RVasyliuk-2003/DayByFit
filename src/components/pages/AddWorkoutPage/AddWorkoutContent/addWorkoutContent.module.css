@@ -135,6 +135,13 @@
   border-left: 6px solid var(--gym);
 }
 
+.exercises,
+.exercise {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .inpt_set {
   width: 100%;
   min-height: 48px;
@@ -157,14 +164,24 @@
   gap: 8px;
 }
 
+.exHead {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+}
+
 .name_inpt_box {
   display: flex;
   gap: 8px;
   align-items: center;
   width: 100%;
 }
+
 .setRow {
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 16px minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn_close {
@@ -291,4 +308,11 @@
 
 .add_btn {
   color: var(--ink);
+}
+
+.setRow input,
+.inpt_set {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }

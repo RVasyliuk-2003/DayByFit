@@ -15,17 +15,20 @@ const LangSwitch = () => {
       <Link to="/account" className={style.account}>
         {user ? t("account.link") : t("account.signInLink")}
       </Link>
-      {LANGS.map((lng) => (
-        <button
-          type="button"
-          key={lng}
-          className={style.btn}
-          aria-pressed={i18n.resolvedLanguage === lng}
-          onClick={() => i18n.changeLanguage(lng)}
-        >
-          {lng.toUpperCase()}
-        </button>
-      ))}
+
+      <div>
+        {LANGS.map((lng) => (
+          <button
+            type="button"
+            key={lng}
+            className={style.btn}
+            aria-pressed={i18n.resolvedLanguage === lng}
+            onClick={() => i18n.changeLanguage(lng)}
+          >
+            {lng.toUpperCase()}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
