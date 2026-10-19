@@ -168,7 +168,6 @@ const AddWorkoutContent = ({
             {t("form.newType")}
           </button>
         </div>
-
         {creating && (
           <div className={style.newType}>
             <input
@@ -216,7 +215,6 @@ const AddWorkoutContent = ({
             </button>
           </div>
         )}
-
         <span className={style.lbl}>{t("form.when")}</span>
         <div className={style.day_box}>
           {timesOfDay.map((key) => (
@@ -231,7 +229,6 @@ const AddWorkoutContent = ({
             </button>
           ))}
         </div>
-
         <span className={style.lbl}>{t("form.duration")}</span>
         <div className={style.time_box}>
           <button
@@ -252,8 +249,7 @@ const AddWorkoutContent = ({
             +
           </button>
         </div>
-
-        {type?.hasExercises ? (
+        {type?.hasExercises && (
           <div className={style.exercises}>
             <span className={style.lbl}>{t("form.exercises")}</span>
 
@@ -333,16 +329,15 @@ const AddWorkoutContent = ({
               {t("form.addExercise")}
             </button>
           </div>
-        ) : (
-          <label>
-            <span className={style.lbl}>{t("form.note")}</span>
-            <textarea
-              className={style.note}
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-            />
-          </label>
         )}
+        <label>
+          <span className={style.lbl}>{t("form.note")}</span>
+          <textarea
+            className={style.note}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+          />
+        </label>
 
         <button type="submit" className={style.save_btn}>
           {t("form.save")}
