@@ -22,10 +22,16 @@ export const getType = (types: WorkoutType[], id: string) =>
   types.find((t) => t.id === id);
 
 export const typeColors = [
-  "#15803D",
   "#8B5CF6",
-  "#0891B2",
-  "#EA580C",
+  "#C026D3",
   "#DB2777",
+  "#EA580C",
+  "#92400E",
+  "#A16207",
+  "#4D7C0F",
+  "#0D9488",
+  "#0891B2",
+  "#0369A1",
   "#64748B",
+  "#334155",
 ];

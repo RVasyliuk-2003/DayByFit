@@ -135,7 +135,7 @@ const AddWorkoutContent = ({
       durationMin,
       typeId,
       exercises: type?.hasExercises ? cleaned : undefined,
-      note: type?.hasExercises ? undefined : note,
+      note: note.trim() || undefined,
     };
 
     onAdd(workout);

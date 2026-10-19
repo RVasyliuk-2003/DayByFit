@@ -147,3 +147,11 @@ button {
   color: inherit;
   font: inherit;
 }
+
+@media (hover: none) and (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}

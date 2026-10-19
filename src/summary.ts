@@ -92,26 +92,38 @@ export const getStats = (rows: Workout[], types: WorkoutType[]) => {
 
 // коротко для таблиці на екрані
 export const shortDetails = (w: Workout) => {
+  const lines: string[] = [];
+
   if (w.exercises && w.exercises.length > 0) {
     const e = w.exercises.length;
     const s = w.exercises.reduce((sum, ex) => sum + ex.sets.length, 0);
-    return `${i18n.t("summary.exercises", { count: e })}, ${i18n.t("summary.sets", { count: s })}`;
+    lines.push(
+      `${i18n.t("summary.exercises", { count: e })}, ${i18n.t("summary.sets", { count: s })}`,
+    );
   }
-  return w.note ?? "";
+  if (w.note) lines.push(w.note);
+
+  return lines.join("\n"); // таблиця вже має white-space: pre-line
 };
 
 // повно для файлу
 const fullDetails = (w: Workout) => {
+  const parts: string[] = [];
+
   if (w.exercises && w.exercises.length > 0) {
-    return w.exercises
-      .map((ex) => {
-        if (ex.sets.length === 0) return ex.name;
-        const top = topSet(ex.sets);
-        return `${ex.name} ${fmtSet(top.weight, top.reps)} (${i18n.t("summary.setsShort", { n: ex.sets.length })})`;
-      })
-      .join(", ");
+    parts.push(
+      w.exercises
+        .map((ex) => {
+          if (ex.sets.length === 0) return ex.name;
+          const top = topSet(ex.sets);
+          return `${ex.name} ${fmtSet(top.weight, top.reps)} (${i18n.t("summary.setsShort", { n: ex.sets.length })})`;
+        })
+        .join(", "),
+    );
   }
-  return w.note ?? "";
+  if (w.note) parts.push(w.note);
+
+  return parts.join(" — ");
 };
 
 export const buildTable = (
