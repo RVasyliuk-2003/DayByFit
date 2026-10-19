@@ -123,6 +123,8 @@
 .exercises {
   display: grid;
   gap: 12px;
+
+  margin-bottom: 20px;
 }
 
 .exercise {
