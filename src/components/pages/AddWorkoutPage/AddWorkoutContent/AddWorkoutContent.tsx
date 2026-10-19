@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+import ExerciseInput from "./ExerciseInput/ExerciseInput";
+
 import type {
   TimeOfDay,
   Workout,
@@ -18,6 +20,7 @@ type Props = {
   onAdd: (workout: Workout) => void;
   types: WorkoutType[];
   onAddType: (type: WorkoutType) => void;
+  exerciseNames: string[];
 };
 
 const timesOfDay: TimeOfDay[] = ["morning", "day", "evening", "night"];
@@ -27,7 +30,12 @@ const emptyExercise = (): Exercise => ({
   sets: [{ weight: 0, reps: 0 }],
 });
 
-const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
+const AddWorkoutContent = ({
+  onAdd,
+  types,
+  onAddType,
+  exerciseNames,
+}: Props) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { dateKey: date } = useWorkoutDate();
@@ -252,11 +260,12 @@ const AddWorkoutContent = ({ onAdd, types, onAddType }: Props) => {
             {exercises.map((ex, i) => (
               <div key={i} className={style.exercise}>
                 <div className={style.exHead}>
-                  <input
+                  <ExerciseInput
                     className={style.exName}
                     placeholder={t("form.exerciseName")}
                     value={ex.name}
-                    onChange={(e) => renameExercise(i, e.target.value)}
+                    onChange={(name) => renameExercise(i, name)}
+                    suggestions={exerciseNames}
                   />
 
                   {exercises.length > 1 && (

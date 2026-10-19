@@ -288,3 +288,7 @@
   font: 700 18px var(--display);
   text-transform: capitalize;
 }
+
+.add_btn {
+  color: var(--ink);
+}

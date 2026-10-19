@@ -14,6 +14,7 @@ import { useWorkouts } from "./useWorkouts";
 import { useWorkoutTypes } from "./useWorkoutTypes";
 import LangSwitch from "./components/LangSwitch/LangSwitch";
 import SyncStatus from "./components/SyncStatus/SyncStatus";
+import { getExerciseNames } from "./progress";
 
 const App = () => {
   const {
@@ -73,6 +74,7 @@ const App = () => {
                 onAdd={addWorkout}
                 types={types}
                 onAddType={addType}
+                exerciseNames={getExerciseNames(workouts)}
               />
             }
           />

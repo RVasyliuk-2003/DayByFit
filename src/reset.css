@@ -142,3 +142,8 @@ textarea {
 a {
   -webkit-tap-highlight-color: transparent;
 }
+
+button {
+  color: inherit;
+  font: inherit;
+}

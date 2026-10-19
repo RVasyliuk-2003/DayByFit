@@ -7,12 +7,18 @@ type Props = {
   onAdd: (workout: Workout) => void;
   types: WorkoutType[];
   onAddType: (type: WorkoutType) => void;
+  exerciseNames: string[];
 };
 
-const AddWorkoutPage = ({ onAdd, types, onAddType }: Props) => (
+const AddWorkoutPage = ({ onAdd, types, onAddType, exerciseNames }: Props) => (
   <section>
     <AddWorkoutHeader />
-    <AddWorkoutContent onAdd={onAdd} types={types} onAddType={onAddType} />
+    <AddWorkoutContent
+      onAdd={onAdd}
+      types={types}
+      onAddType={onAddType}
+      exerciseNames={exerciseNames}
+    />
   </section>
 );
 
