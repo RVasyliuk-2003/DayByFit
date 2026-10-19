@@ -63,10 +63,6 @@ const CalendarContent = ({
               >
                 {t("calendar.delete")}
               </button>
-
-              {w.exercises?.map((ex, i) => (
-                <ExerciseRow key={i} exercise={ex} />
-              ))}
             </article>
           );
         })
