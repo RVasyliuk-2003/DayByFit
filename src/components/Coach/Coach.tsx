@@ -3,6 +3,7 @@ import style from "./coach.module.css";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 import { useAuth } from "../../auth/authContext";
 import {
@@ -14,6 +15,30 @@ import {
 
 const SUGGESTIONS = ["coach.s1", "coach.s2", "coach.s3"] as const;
 
+// спеціальні «нерозривні» дефіси не дають рядкові перенестись
+const clean = (s: string) => s.replace(/[\u2010\u2011\u2012]/g, "-");
+
+const Markdown = ({ text }: { text: string }) => (
+  <ReactMarkdown
+    remarkPlugins={[remarkGfm]}
+    components={{
+      // таблиця може бути ширшою за бульбашку, тому гортається вбік
+      table: ({ children }) => (
+        <div className={style.tableWrap}>
+          <table>{children}</table>
+        </div>
+      ),
+    }}
+  >
+    {clean(text)}
+  </ReactMarkdown>
+);
+
+const readViewport = () => ({
+  height: window.visualViewport?.height ?? window.innerHeight,
+  top: window.visualViewport?.offsetTop ?? 0,
+});
+
 const Coach = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -23,11 +48,11 @@ const Coach = () => {
   const [messages, setMessages] = useState<CoachMessage[]>([]);
   const [loadedFor, setLoadedFor] = useState<string | null>(null);
   const [text, setText] = useState("");
+  const [focused, setFocused] = useState(false);
   const [sending, setSending] = useState(false);
+  const [streaming, setStreaming] = useState<string | null>(null);
   const [error, setError] = useState("");
-  const [height, setHeight] = useState(
-    () => window.visualViewport?.height ?? window.innerHeight,
-  );
+  const [vp, setVp] = useState(readViewport);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // історія вантажиться при першому відкритті (і заново, якщо зайшов інший акаунт)
@@ -50,14 +75,29 @@ const Coach = () => {
     };
   }, [open, userId, loadedFor, t]);
 
-  // висота панелі = видима область, тож клавіатура на телефоні не ховає поле вводу
+  // панель лишається в межах ВИДИМОЇ області: і за висотою, і за зсувом (iOS зсуває її з клавіатурою)
   useEffect(() => {
-    const vv = window.visualViewport;
-    if (!vv) return;
-    const update = () => setHeight(vv.height);
-    vv.addEventListener("resize", update);
-    return () => vv.removeEventListener("resize", update);
+    const v = window.visualViewport;
+    if (!v) return;
+    const update = () => setVp(readViewport());
+    v.addEventListener("resize", update);
+    v.addEventListener("scroll", update);
+    return () => {
+      v.removeEventListener("resize", update);
+      v.removeEventListener("scroll", update);
+    };
   }, []);
+
+  // поки чат відкритий, сторінка під ним не гортається
+  useEffect(() => {
+    if (!open) return;
+    const root = document.documentElement;
+    const prev = root.style.overflow;
+    root.style.overflow = "hidden";
+    return () => {
+      root.style.overflow = prev;
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -73,7 +113,7 @@ const Coach = () => {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ block: "end" });
-  }, [shown.length, sending, open, height]);
+  }, [shown.length, streaming, open, vp.height]);
 
   const send = async (raw: string) => {
     const message = raw.trim();
@@ -82,13 +122,14 @@ const Coach = () => {
     setSending(true);
     setError("");
     setText("");
+    setStreaming("");
     setMessages((prev) => [
       ...prev,
       { id: crypto.randomUUID(), role: "user", content: message },
     ]);
 
     try {
-      const reply = await askCoach(message);
+      const reply = await askCoach(message, setStreaming);
       setMessages((prev) => [
         ...prev,
         { id: crypto.randomUUID(), role: "assistant", content: reply },
@@ -101,11 +142,14 @@ const Coach = () => {
         e instanceof CoachLimitError ? t("coach.limit") : t("coach.failed"),
       );
     } finally {
+      setStreaming(null);
       setSending(false);
     }
   };
 
   if (!user) return null; // гостям тренер недоступний
+
+  const showChips = ready && !sending && !text && !focused;
 
   return (
     <>
@@ -140,7 +184,7 @@ const Coach = () => {
       {open && (
         <div
           className={style.panel}
-          style={{ height }}
+          style={{ top: vp.top, height: vp.height }}
           role="dialog"
           aria-modal="true"
           aria-label={t("coach.title")}
@@ -161,22 +205,8 @@ const Coach = () => {
           </header>
 
           <div className={style.list}>
-            {ready && shown.length === 0 && (
-              <div className={style.intro}>
-                <p>{t("coach.intro")}</p>
-                <div className={style.chips}>
-                  {SUGGESTIONS.map((key) => (
-                    <button
-                      type="button"
-                      key={key}
-                      className={style.chip}
-                      onClick={() => send(t(key))}
-                    >
-                      {t(key)}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            {ready && shown.length === 0 && streaming === null && (
+              <p className={style.intro}>{t("coach.intro")}</p>
             )}
 
             {shown.map((m) => (
@@ -184,15 +214,16 @@ const Coach = () => {
                 key={m.id}
                 className={m.role === "user" ? style.user : style.bot}
               >
-                {m.role === "user" ? (
-                  m.content
-                ) : (
-                  <ReactMarkdown>{m.content}</ReactMarkdown>
-                )}
+                {m.role === "user" ? m.content : <Markdown text={m.content} />}
               </div>
             ))}
 
-            {sending && <div className={style.bot}>{t("coach.typing")}</div>}
+            {streaming !== null && (
+              <div className={style.bot}>
+                {streaming ? <Markdown text={streaming} /> : t("coach.typing")}
+              </div>
+            )}
+
             {error && (
               <p className={style.error} role="alert">
                 {error}
@@ -201,41 +232,60 @@ const Coach = () => {
             <div ref={bottomRef} />
           </div>
 
-          <form
-            className={style.form}
-            onSubmit={(e) => {
-              e.preventDefault();
-              void send(text);
-            }}
-          >
-            <textarea
-              className={style.input}
-              rows={1}
-              value={text}
-              placeholder={t("coach.placeholder")}
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={(e) => {
-                // на комп'ютері Enter надсилає, Shift+Enter новий рядок; на телефоні Enter це новий рядок
-                if (
-                  e.key === "Enter" &&
-                  !e.shiftKey &&
-                  !e.nativeEvent.isComposing &&
-                  window.matchMedia("(pointer: fine)").matches
-                ) {
-                  e.preventDefault();
-                  void send(text);
-                }
+          <div className={style.footer}>
+            {showChips && (
+              <div className={style.quick}>
+                {SUGGESTIONS.map((key) => (
+                  <button
+                    type="button"
+                    key={key}
+                    className={style.chip}
+                    onClick={() => send(t(key))}
+                  >
+                    {t(key)}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <form
+              className={style.form}
+              onSubmit={(e) => {
+                e.preventDefault();
+                void send(text);
               }}
-            />
-            <button
-              type="submit"
-              className={style.send}
-              disabled={sending || !ready || !text.trim()}
-              aria-label={t("coach.send")}
             >
-              ↑
-            </button>
-          </form>
+              <textarea
+                className={style.input}
+                rows={1}
+                value={text}
+                placeholder={t("coach.placeholder")}
+                onChange={(e) => setText(e.target.value)}
+                onFocus={() => setFocused(true)}
+                onBlur={() => setFocused(false)}
+                onKeyDown={(e) => {
+                  // на комп'ютері Enter надсилає, Shift+Enter новий рядок; на телефоні Enter це новий рядок
+                  if (
+                    e.key === "Enter" &&
+                    !e.shiftKey &&
+                    !e.nativeEvent.isComposing &&
+                    window.matchMedia("(pointer: fine)").matches
+                  ) {
+                    e.preventDefault();
+                    void send(text);
+                  }
+                }}
+              />
+              <button
+                type="submit"
+                className={style.send}
+                disabled={sending || !ready || !text.trim()}
+                aria-label={t("coach.send")}
+              >
+                ↑
+              </button>
+            </form>
+          </div>
         </div>
       )}
     </>

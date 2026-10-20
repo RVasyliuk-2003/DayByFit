@@ -1,4 +1,3 @@
-import { FunctionsHttpError } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
 
 export type CoachMessage = {
@@ -20,18 +19,46 @@ export const fetchCoachHistory = async (): Promise<CoachMessage[]> => {
   return (data as CoachMessage[]).reverse();
 };
 
-export const askCoach = async (message: string): Promise<string> => {
-  const { data, error } = await supabase.functions.invoke("coach", {
-    body: { message },
-  });
+// onText отримує весь накопичений текст щоразу, як приходить нова частина
+export const askCoach = async (
+  message: string,
+  onText: (text: string) => void,
+): Promise<string> => {
+  const { data } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
+  if (!token) throw new Error("no session");
 
-  if (error) {
-    if (error instanceof FunctionsHttpError) {
-      const body = await error.context.json().catch(() => null);
-      if (body?.error === "limit") throw new CoachLimitError();
-    }
-    throw error;
+  const res = await fetch(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/coach`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        apikey: import.meta.env.VITE_SUPABASE_KEY,
+      },
+      body: JSON.stringify({ message }),
+    },
+  );
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    if (body?.error === "limit") throw new CoachLimitError();
+    throw new Error(body?.error ?? `HTTP ${res.status}`);
+  }
+  if (!res.body) throw new Error("no stream");
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let full = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    full += decoder.decode(value, { stream: true });
+    onText(full);
   }
 
-  return data.reply as string;
+  if (!full.trim()) throw new Error("empty reply");
+  return full.trim();
 };
