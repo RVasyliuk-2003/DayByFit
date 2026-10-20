@@ -67,9 +67,9 @@ export const askCoach = async (
   return full.trim();
 };
 
-export const clearCoach = async (): Promise<void> => {
+export const clearCoach = async (forget: boolean): Promise<void> => {
   const { error } = await supabase.functions.invoke("coach", {
-    body: { action: "clear" },
+    body: { action: "clear", forget },
   });
   if (error) throw error;
 };

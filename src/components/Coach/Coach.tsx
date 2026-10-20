@@ -123,8 +123,11 @@ const Coach = () => {
 
   const clear = async () => {
     if (sending || !window.confirm(t("coach.clearConfirm"))) return;
+    
+    // друге питання: чи стирати довготривалі нотатки про користувача
+    const forget = window.confirm(t("coach.forgetConfirm"));
     try {
-      await clearCoach();
+      await clearCoach(forget);
       setMessages([]);
       setError("");
     } catch {

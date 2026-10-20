@@ -176,6 +176,7 @@
     "limit": "Daily message limit reached. Come back tomorrow.",
     "loadFailed": "Couldn't load chat history.",
     "clear": "Clear",
-    "clearConfirm": "Clear the chat? The coach will forget this conversation."
+    "clearConfirm": "Clear the chat? The coach will forget this conversation.",
+    "forgetConfirm": "Also erase the coach's notes about you (goals, injuries, preferences)? OK: erase, Cancel: keep."
   }
 }
