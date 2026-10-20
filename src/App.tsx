@@ -1,21 +1,34 @@
 import "./reset.css";
 import "./App.css";
-import AccountPage from "./components/pages/AccountPage/AccountPage";
+import { lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import CalendarPage from "./components/pages/CalendarPage/CalendarPage";
-import ProgressPage from "./components/pages/ProgressPage/ProgressPage";
-import AddWorkoutPage from "./components/pages/AddWorkoutPage/AddWorkoutPage";
-import SummaryPage from "./components/pages/SummaryPage/SummaryPage";
-import ExercisesPage from "./components/pages/ExercisesPage/ExercisesPage";
 import NavBar from "./components/NavBar/NavBar";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LangSwitch from "./components/LangSwitch/LangSwitch";
+import SyncStatus from "./components/SyncStatus/SyncStatus";
 
 import { useWorkouts } from "./useWorkouts";
 import { useWorkoutTypes } from "./useWorkoutTypes";
-import LangSwitch from "./components/LangSwitch/LangSwitch";
-import SyncStatus from "./components/SyncStatus/SyncStatus";
 import { getExerciseNames } from "./progress";
-import Coach from "./components/Coach/Coach";
+
+const AccountPage = lazy(
+  () => import("./components/pages/AccountPage/AccountPage"),
+);
+const ProgressPage = lazy(
+  () => import("./components/pages/ProgressPage/ProgressPage"),
+);
+const AddWorkoutPage = lazy(
+  () => import("./components/pages/AddWorkoutPage/AddWorkoutPage"),
+);
+const SummaryPage = lazy(
+  () => import("./components/pages/SummaryPage/SummaryPage"),
+);
+const ExercisesPage = lazy(
+  () => import("./components/pages/ExercisesPage/ExercisesPage"),
+);
+// чат несе важкий react-markdown, тож вантажиться окремо
+const Coach = lazy(() => import("./components/Coach/Coach"));
 
 const App = () => {
   const {
@@ -52,45 +65,49 @@ const App = () => {
             tDismiss();
           }}
         />
-        <Routes>
-          <Route path="/account" element={<AccountPage />} />
-          <Route
-            path="/"
-            element={
-              <CalendarPage
-                workouts={workouts}
-                types={types}
-                onDelete={removeWorkout}
-              />
-            }
-          />
-          <Route
-            path="/progress"
-            element={<ProgressPage workouts={workouts} />}
-          />
-          <Route
-            path="/add"
-            element={
-              <AddWorkoutPage
-                onAdd={addWorkout}
-                types={types}
-                onAddType={addType}
-                exerciseNames={getExerciseNames(workouts)}
-              />
-            }
-          />
-          <Route
-            path="/summary"
-            element={<SummaryPage workouts={workouts} types={types} />}
-          />
-          <Route
-            path="/exercises"
-            element={<ExercisesPage workouts={workouts} />}
-          />
-        </Routes>
+        <Suspense fallback={null}>
+          <Routes>
+            <Route path="/account" element={<AccountPage />} />
+            <Route
+              path="/"
+              element={
+                <CalendarPage
+                  workouts={workouts}
+                  types={types}
+                  onDelete={removeWorkout}
+                />
+              }
+            />
+            <Route
+              path="/progress"
+              element={<ProgressPage workouts={workouts} />}
+            />
+            <Route
+              path="/add"
+              element={
+                <AddWorkoutPage
+                  onAdd={addWorkout}
+                  types={types}
+                  onAddType={addType}
+                  exerciseNames={getExerciseNames(workouts)}
+                />
+              }
+            />
+            <Route
+              path="/summary"
+              element={<SummaryPage workouts={workouts} types={types} />}
+            />
+            <Route
+              path="/exercises"
+              element={<ExercisesPage workouts={workouts} />}
+            />
+          </Routes>
+        </Suspense>
       </main>
       <NavBar />
-      <Coach />
+      <Suspense fallback={null}>
+        <Coach />
+      </Suspense>
     </BrowserRouter>
   );
 };
