@@ -231,3 +231,8 @@
   opacity: 0.4;
   cursor: default;
 }
+
+.user,
+.bot {
+  flex: none;
+}

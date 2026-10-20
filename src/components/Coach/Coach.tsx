@@ -66,8 +66,13 @@ const Coach = () => {
         setMessages(list);
         setLoadedFor(userId);
       })
-      .catch(() => {
-        if (!cancelled) setError(t("coach.loadFailed"));
+      .catch((e) => {
+        if (!cancelled)
+          setError(
+            e instanceof CoachLimitError
+              ? t("coach.limit")
+              : `${t("coach.failed")} (${e instanceof Error ? e.message : "?"})`,
+          );
       });
 
     return () => {
