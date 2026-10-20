@@ -11,7 +11,7 @@ const CONTEXT_WEEKS = 12; // скільки тижнів тренувань пе
 const MAX_CONTEXT_CHARS = 9000; // ліміт розміру журналу (~3 тис. токенів)
 const MAX_INPUT_CHARS = 1000; // довжина одного повідомлення
 
-const MEMORY_EVERY = 2; // скільки нових повідомлень користувача треба для оновлення нотаток
+const MEMORY_EVERY = 10; // скільки нових повідомлень користувача треба для оновлення нотаток
 const MEMORY_MAX_CHARS = 1500; // розмір нотаток
 
 declare const EdgeRuntime: { waitUntil(p: Promise<unknown>): void } | undefined;
