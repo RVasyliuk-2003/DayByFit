@@ -1,37 +1,151 @@
+/* кнопка виклику чату */
+.fab {
+  position: fixed;
+  right: max(16px, calc((100vw - var(--app-w, 480px)) / 2 + 16px));
+  bottom: calc(112px + env(safe-area-inset-bottom));
+  z-index: 40;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+}
+
+/* панель чату: ніколи не ширша за екран і не виходить за межі */
+.panel {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100vw, var(--app-w, 480px));
+  max-width: 100vw;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.title {
+  margin: 0;
+  font: 700 18px/1.2 var(--display);
+}
+.sub {
+  margin: 2px 0 0;
+  font: 400 13px/1.3 var(--text);
+  color: var(--ink-2);
+}
+
+.close {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: none;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* список повідомлень: гортається лише вертикально */
+.list {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.intro {
+  margin: 0;
+  font: 500 15px/1.4 var(--text);
+  color: var(--ink-2);
+}
+
+.user,
+.bot {
+  min-width: 0;
+  max-width: 88%;
+  padding: 10px 14px;
+  font: 400 15px/1.45 var(--text);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.user {
+  align-self: flex-end;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 16px 16px 4px 16px;
+  white-space: pre-wrap;
+}
+
 .bot {
   align-self: flex-start;
-  min-width: 0;
-  max-width: 92%;
+  overflow: hidden;
   background: rgba(20, 33, 61, 0.08);
   border-radius: 16px 16px 16px 4px;
 }
 
-.footer {
-  border-top: 1px solid var(--line);
-  background: var(--paper);
+.bot > :first-child {
+  margin-top: 0;
 }
-
-.quick {
-  display: flex;
-  gap: 8px;
-  padding: 10px 12px 0;
+.bot > :last-child {
+  margin-bottom: 0;
+}
+.bot p {
+  margin: 0 0 8px;
+}
+.bot ul,
+.bot ol {
+  margin: 0 0 8px;
+  padding-left: 20px;
+}
+.bot li {
+  margin: 2px 0;
+}
+.bot h1,
+.bot h2,
+.bot h3 {
+  margin: 8px 0 4px;
+  font: 700 15px/1.3 var(--text);
+}
+.bot code {
+  font-size: 13px;
+  background: rgba(20, 33, 61, 0.1);
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+.bot pre {
+  max-width: 100%;
   overflow-x: auto;
 }
-.quick .chip {
-  flex: none;
-  white-space: nowrap;
-}
 
-.form {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-}
-
+/* таблиця гортається вбік усередині бульбашки і не розтягує сторінку */
 .tableWrap {
+  max-width: 100%;
   margin: 0 0 8px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .bot table {
   border-collapse: collapse;
@@ -42,13 +156,78 @@
   padding: 4px 8px;
   border: 1px solid var(--line);
   text-align: left;
+  white-space: nowrap;
 }
 .bot th {
   font-weight: 700;
 }
 
-.intro {
+.error {
   margin: 0;
-  font: 500 15px/1.4 var(--text);
-  color: var(--ink-2);
+  font: 500 14px/1.4 var(--text);
+  color: #b3261e;
+}
+
+/* нижня частина: підказки й поле вводу */
+.footer {
+  flex: none;
+  min-width: 0;
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.quick {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px 0;
+  overflow-x: auto;
+}
+
+.chip {
+  flex: none;
+  white-space: nowrap;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 500 14px/1 var(--text);
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+}
+
+.input {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-height: 120px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 16px/1.4 var(--text);
+  resize: none;
+  field-sizing: content;
+}
+
+.send {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 20px;
+  cursor: pointer;
+}
+.send:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
