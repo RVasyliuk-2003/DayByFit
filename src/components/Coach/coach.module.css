@@ -236,3 +236,17 @@
 .bot {
   flex: none;
 }
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.clear {
+  border: 0;
+  background: none;
+  padding: 8px;
+  font: 500 14px/1 var(--text);
+  color: var(--ink-2);
+  cursor: pointer;
+}

@@ -8,6 +8,7 @@ import remarkGfm from "remark-gfm";
 import { useAuth } from "../../auth/authContext";
 import {
   askCoach,
+  clearCoach,
   fetchCoachHistory,
   CoachLimitError,
   type CoachMessage,
@@ -120,6 +121,16 @@ const Coach = () => {
     bottomRef.current?.scrollIntoView({ block: "end" });
   }, [shown.length, streaming, open, vp.height]);
 
+  const clear = async () => {
+    if (sending || !window.confirm(t("coach.clearConfirm"))) return;
+    try {
+      await clearCoach();
+      setMessages([]);
+      setError("");
+    } catch {
+      setError(t("coach.failed"));
+    }
+  };
   const send = async (raw: string) => {
     const message = raw.trim();
     if (!message || sending || !ready) return;
@@ -199,14 +210,21 @@ const Coach = () => {
               <h2 className={style.title}>{t("coach.title")}</h2>
               <p className={style.sub}>{t("coach.subtitle")}</p>
             </div>
-            <button
-              type="button"
-              className={style.close}
-              onClick={() => setOpen(false)}
-              aria-label={t("coach.close")}
-            >
-              ×
-            </button>
+            <div className={style.actions}>
+              {shown.length > 0 && (
+                <button type="button" className={style.clear} onClick={clear}>
+                  {t("coach.clear")}
+                </button>
+              )}
+              <button
+                type="button"
+                className={style.close}
+                onClick={() => setOpen(false)}
+                aria-label={t("coach.close")}
+              >
+                ×
+              </button>
+            </div>
           </header>
 
           <div className={style.list}>

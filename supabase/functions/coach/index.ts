@@ -152,12 +152,26 @@ const handle = async (req: Request): Promise<Response> => {
   const admin = createClient(url, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
   let message = "";
+  let action = "";
   try {
     const body = await req.json();
     message = typeof body.message === "string" ? body.message.trim() : "";
+    action = typeof body.action === "string" ? body.action : "";
   } catch {
     /* порожнє тіло */
   }
+
+  // «очистити чат»: ховаємо повідомлення, але ліміт і майбутня пам'ять їх бачать
+  if (action === "clear") {
+    const { error } = await admin
+      .from("coach_messages")
+      .update({ hidden: true })
+      .eq("user_id", user.id)
+      .eq("hidden", false);
+    if (error) return json({ error: "clear" }, 500);
+    return json({ ok: true });
+  }
+
   if (!message || message.length > MAX_INPUT_CHARS) return json({ error: "bad_message" }, 400);
 
   // ліміт на користувача, щоб не спалити спільну безкоштовну квоту
@@ -175,6 +189,7 @@ const handle = async (req: Request): Promise<Response> => {
   const { data: past } = await userClient
     .from("coach_messages")
     .select("role, content")
+    .eq("hidden", false)
     .gte("created_at", historySince)
     .order("created_at", { ascending: false })
     .limit(HISTORY_LIMIT);

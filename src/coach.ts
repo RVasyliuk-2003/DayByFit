@@ -14,7 +14,11 @@ export const fetchCoachHistory = async (): Promise<CoachMessage[]> => {
     .from("coach_messages")
     .select("id, role, content")
     .order("created_at", { ascending: false })
-    .limit(50);
+    .limit(50)
+    .select("id, role, content")
+    .eq("hidden", false)
+    .order("created_at", { ascending: false });
+    
   if (error) throw error;
   return (data as CoachMessage[]).reverse();
 };
@@ -61,4 +65,11 @@ export const askCoach = async (
 
   if (!full.trim()) throw new Error("empty reply");
   return full.trim();
+};
+
+export const clearCoach = async (): Promise<void> => {
+  const { error } = await supabase.functions.invoke("coach", {
+    body: { action: "clear" },
+  });
+  if (error) throw error;
 };
