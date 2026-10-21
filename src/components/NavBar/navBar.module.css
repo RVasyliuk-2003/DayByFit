@@ -10,6 +10,8 @@
   background-color: var(--ink);
   padding: 10px 8px;
   border-radius: 22px 22px 0 0;
+
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
 }
 
 .link {
