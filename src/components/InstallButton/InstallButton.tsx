@@ -1,6 +1,6 @@
 import style from "./installButton.module.css";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type InstallEvent = Event & {
@@ -21,6 +21,8 @@ const InstallButton = () => {
   const [promptEvent, setPromptEvent] = useState<InstallEvent | null>(null);
   const [hint, setHint] = useState(false);
 
+  const btnRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     // Android / Chrome: браузер сам повідомляє, що застосунок можна встановити
     const onPrompt = (e: Event) => {
@@ -40,6 +42,17 @@ const InstallButton = () => {
     };
   }, []);
 
+  // підказка закривається дотиком у будь-якому місці, крім самої кнопки
+  useEffect(() => {
+    if (!hint) return;
+    const close = (e: PointerEvent) => {
+      if (btnRef.current?.contains(e.target as Node)) return;
+      setHint(false);
+    };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, [hint]);
+
   if (installed) return null; // уже встановлено, кнопка не потрібна
 
   const ios = isIos();
@@ -56,7 +69,12 @@ const InstallButton = () => {
 
   return (
     <div className={style.wrap}>
-      <button type="button" className={style.btn} onClick={onClick}>
+      <button
+        type="button"
+        ref={btnRef}
+        className={style.btn}
+        onClick={onClick}
+      >
         {t("install.button")}
       </button>
       {hint && (
