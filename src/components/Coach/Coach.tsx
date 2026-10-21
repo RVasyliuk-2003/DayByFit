@@ -77,7 +77,17 @@ const Coach = () => {
   const [streaming, setStreaming] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [vp, setVp] = useState(readViewport);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  
+    const bottomRef = useRef<HTMLDivElement>(null);
+    const [fab, setFab] = useState(loadFab);
+    const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
+    const dragRef = useRef<{
+      startX: number;
+      startY: number;
+      offX: number;
+      offY: number;
+      moved: boolean;
+    } | null>(null);
 
   // історія вантажиться при першому відкритті (і заново, якщо зайшов інший акаунт)
   useEffect(() => {
@@ -191,15 +201,6 @@ const Coach = () => {
 
   if (!user) return null; // гостям тренер недоступний
 
-  const [fab, setFab] = useState(loadFab);
-  const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
-  const dragRef = useRef<{
-    startX: number;
-    startY: number;
-    offX: number;
-    offY: number;
-    moved: boolean;
-  } | null>(null);
 
   const onFabDown = (e: ReactPointerEvent<HTMLButtonElement>) => {
     const r = e.currentTarget.getBoundingClientRect();

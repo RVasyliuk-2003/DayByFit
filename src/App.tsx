@@ -72,41 +72,43 @@ const App = () => {
         />
         <Suspense fallback={null}>
           <Routes>
-            <Route element={<RequireAuth />}></Route>
             <Route path="/account" element={<AccountPage />} />
-            <Route
-              path="/"
-              element={
-                <CalendarPage
-                  workouts={workouts}
-                  types={types}
-                  onDelete={removeWorkout}
-                />
-              }
-            />
-            <Route
-              path="/progress"
-              element={<ProgressPage workouts={workouts} />}
-            />
-            <Route
-              path="/add"
-              element={
-                <AddWorkoutPage
-                  onAdd={addWorkout}
-                  types={types}
-                  onAddType={addType}
-                  exerciseNames={getExerciseNames(workouts)}
-                />
-              }
-            />
-            <Route
-              path="/summary"
-              element={<SummaryPage workouts={workouts} types={types} />}
-            />
-            <Route
-              path="/exercises"
-              element={<ExercisesPage workouts={workouts} />}
-            />
+            {/* усе, що нижче, лише для залогінених */}
+            <Route element={<RequireAuth />}>
+              <Route
+                path="/"
+                element={
+                  <CalendarPage
+                    workouts={workouts}
+                    types={types}
+                    onDelete={removeWorkout}
+                  />
+                }
+              />
+              <Route
+                path="/progress"
+                element={<ProgressPage workouts={workouts} />}
+              />
+              <Route
+                path="/add"
+                element={
+                  <AddWorkoutPage
+                    onAdd={addWorkout}
+                    types={types}
+                    onAddType={addType}
+                    exerciseNames={getExerciseNames(workouts)}
+                  />
+                }
+              />
+              <Route
+                path="/summary"
+                element={<SummaryPage workouts={workouts} types={types} />}
+              />
+              <Route
+                path="/exercises"
+                element={<ExercisesPage workouts={workouts} />}
+              />
+            </Route>
           </Routes>
         </Suspense>
       </main>
