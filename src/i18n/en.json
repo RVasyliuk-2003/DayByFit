@@ -178,5 +178,10 @@
     "clear": "Clear",
     "clearConfirm": "Clear the chat? The coach will forget this conversation.",
     "forgetConfirm": "Also erase the coach's notes about you (goals, injuries, preferences)? OK: erase, Cancel: keep."
+  },
+
+  "install": {
+    "button": "Install",
+    "ios": "Tap the Share button at the bottom, then “Add to Home Screen”."
   }
 }

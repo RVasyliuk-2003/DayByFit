@@ -3,6 +3,7 @@ import style from "./langSwitch.module.css";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/authContext";
 import { useTranslation } from "react-i18next";
+import InstallButton from "../InstallButton/InstallButton";
 
 const LANGS = ["uk", "en"] as const;
 
@@ -15,6 +16,8 @@ const LangSwitch = () => {
       <Link to="/account" className={style.account}>
         {user ? t("account.link") : t("account.signInLink")}
       </Link>
+
+      <InstallButton />
 
       <div>
         {LANGS.map((lng) => (
