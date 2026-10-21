@@ -13,6 +13,10 @@
   background: var(--ink);
   color: var(--paper);
   cursor: pointer;
+
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* панель чату: ніколи не ширша за екран і не виходить за межі */
@@ -249,4 +253,9 @@
   font: 500 14px/1 var(--text);
   color: var(--ink-2);
   cursor: pointer;
+}
+
+.fabLeft {
+  right: auto;
+  left: max(16px, calc((100vw - var(--app-w, 480px)) / 2 + 16px));
 }

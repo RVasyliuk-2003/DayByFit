@@ -1,6 +1,7 @@
 import style from "./coach.module.css";
 
 import { useEffect, useRef, useState } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import { useTranslation } from "react-i18next";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -39,6 +40,28 @@ const readViewport = () => ({
   height: window.visualViewport?.height ?? window.innerHeight,
   top: window.visualViewport?.offsetTop ?? 0,
 });
+
+const FAB = 52; // розмір кнопки
+const NAV_SPACE = 90; // висота нижньої навігації
+
+type FabPos = { side: "left" | "right"; top: number };
+
+const clampTop = (top: number) =>
+  Math.min(Math.max(top, 12), window.innerHeight - FAB - NAV_SPACE);
+
+const loadFab = (): FabPos => {
+  try {
+    const p = JSON.parse(localStorage.getItem("coachFab") ?? "null");
+    if (
+      (p?.side === "left" || p?.side === "right") &&
+      typeof p.top === "number"
+    )
+      return p;
+  } catch {
+    /* сховище недоступне */
+  }
+  return { side: "right", top: window.innerHeight - FAB - 112 };
+};
 
 const Coach = () => {
   const { t } = useTranslation();
@@ -123,7 +146,7 @@ const Coach = () => {
 
   const clear = async () => {
     if (sending || !window.confirm(t("coach.clearConfirm"))) return;
-    
+
     // друге питання: чи стирати довготривалі нотатки про користувача
     const forget = window.confirm(t("coach.forgetConfirm"));
     try {
@@ -168,6 +191,66 @@ const Coach = () => {
 
   if (!user) return null; // гостям тренер недоступний
 
+  const [fab, setFab] = useState(loadFab);
+  const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
+  const dragRef = useRef<{
+    startX: number;
+    startY: number;
+    offX: number;
+    offY: number;
+    moved: boolean;
+  } | null>(null);
+
+  const onFabDown = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      offX: e.clientX - r.left,
+      offY: e.clientY - r.top,
+      moved: false,
+    };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const onFabMove = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    const d = dragRef.current;
+    if (!d) return;
+    if (!d.moved && Math.hypot(e.clientX - d.startX, e.clientY - d.startY) < 8)
+      return;
+    d.moved = true;
+    setDrag({ x: e.clientX - d.offX, y: e.clientY - d.offY });
+  };
+
+  const onFabUp = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    const d = dragRef.current;
+    dragRef.current = null;
+    if (!d) return;
+
+    if (!d.moved) {
+      setOpen(true); // звичайний тап
+      return;
+    }
+
+    // відпустили: прилипаємо до найближчого боку
+    const next: FabPos = {
+      side: e.clientX < window.innerWidth / 2 ? "left" : "right",
+      top: clampTop(e.clientY - d.offY),
+    };
+    setFab(next);
+    setDrag(null);
+    try {
+      localStorage.setItem("coachFab", JSON.stringify(next));
+    } catch {
+      /* не страшно */
+    }
+  };
+
+  const onFabCancel = () => {
+    dragRef.current = null;
+    setDrag(null);
+  };
+
   const showChips = ready && !sending && !text && !focused;
 
   return (
@@ -175,8 +258,20 @@ const Coach = () => {
       {!open && (
         <button
           type="button"
-          className={style.fab}
-          onClick={() => setOpen(true)}
+          className={`${style.fab} ${fab.side === "left" ? style.fabLeft : ""}`}
+          style={
+            drag
+              ? { left: drag.x, top: drag.y, right: "auto", bottom: "auto" }
+              : { top: clampTop(fab.top), bottom: "auto" }
+          }
+          onPointerDown={onFabDown}
+          onPointerMove={onFabMove}
+          onPointerUp={onFabUp}
+          onPointerCancel={onFabCancel}
+          onClick={(e) => {
+            // тап пальцем обробляє pointerup; тут лише клавіатура (Enter/Space)
+            if (e.detail === 0) setOpen(true);
+          }}
           aria-label={t("coach.open")}
         >
           <svg
