@@ -55,7 +55,7 @@ const InstallButton = () => {
   };
 
   return (
-    <div>
+    <div className={style.wrap}>
       <button type="button" className={style.btn} onClick={onClick}>
         {t("install.button")}
       </button>
