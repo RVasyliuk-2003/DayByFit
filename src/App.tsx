@@ -3,6 +3,9 @@ import "./App.css";
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import RequireAuth from "./auth/RequireAuth";
+import { useAuth } from "./auth/authContext";
+
 import CalendarPage from "./components/pages/CalendarPage/CalendarPage";
 import NavBar from "./components/NavBar/NavBar";
 import LangSwitch from "./components/LangSwitch/LangSwitch";
@@ -31,6 +34,8 @@ const ExercisesPage = lazy(
 const Coach = lazy(() => import("./components/Coach/Coach"));
 
 const App = () => {
+  const { user } = useAuth();
+
   const {
     workouts,
     addWorkout,
@@ -67,6 +72,7 @@ const App = () => {
         />
         <Suspense fallback={null}>
           <Routes>
+            <Route element={<RequireAuth />}></Route>
             <Route path="/account" element={<AccountPage />} />
             <Route
               path="/"
@@ -104,7 +110,7 @@ const App = () => {
           </Routes>
         </Suspense>
       </main>
-      <NavBar />
+      {user && <NavBar />}
       <Suspense fallback={null}>
         <Coach />
       </Suspense>
