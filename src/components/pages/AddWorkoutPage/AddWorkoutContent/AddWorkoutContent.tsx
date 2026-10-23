@@ -1,4 +1,5 @@
 import style from "./addWorkoutContent.module.css";
+import { Link } from "react-router-dom";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -168,6 +169,10 @@ const AddWorkoutContent = ({
             {t("form.newType")}
           </button>
         </div>
+
+        <Link to="/types" className={style.manage}>
+          {t("typesPage.manage")}
+        </Link>
         {creating && (
           <div className={style.newType}>
             <input

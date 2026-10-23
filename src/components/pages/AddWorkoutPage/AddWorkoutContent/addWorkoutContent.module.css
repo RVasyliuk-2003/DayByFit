@@ -318,3 +318,12 @@
   min-width: 0;
   box-sizing: border-box;
 }
+
+.manage {
+  justify-self: start;
+  margin-top: -4px;
+  font: 600 13px var(--text);
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

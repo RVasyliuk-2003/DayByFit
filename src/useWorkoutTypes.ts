@@ -1,6 +1,6 @@
 import type { WorkoutType } from "./types";
 import { defaultTypes } from "./workoutTypes";
-import { fetchTypes, insertType } from "./cloud";
+import { fetchTypes, insertType, deleteTypeById } from "./cloud";
 import { useSyncedList } from "./useSyncedList";
 
 export function useWorkoutTypes() {
@@ -8,11 +8,13 @@ export function useWorkoutTypes() {
     storageKey: "daybyfit:types",
     fetchAll: fetchTypes,
     insert: insertType,
+    remove: deleteTypeById,
   });
 
   return {
     types: [...defaultTypes, ...list.items],
     addType: list.add,
+    removeType: list.remove,
     loading: list.loading,
     error: list.error,
     retry: list.retry,

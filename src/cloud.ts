@@ -66,7 +66,7 @@ export const updateWorkoutById = async (w: Workout) => {
     .eq("id", w.id)
     .select("id");
   if (error) throw error;
-  
+
   // якщо правила бази не дозволили, рядків оновлено 0, і це теж збій
   if (!data || data.length === 0) throw new Error("not updated");
 };
@@ -90,4 +90,14 @@ export const insertType = async (t: WorkoutType) => {
     has_exercises: t.hasExercises,
   });
   if (error) throw error;
+};
+
+export const deleteTypeById = async (id: string) => {
+  const { data, error } = await supabase
+    .from("workout_types")
+    .delete()
+    .eq("id", id)
+    .select("id");
+  if (error) throw error;
+  if (!data || data.length === 0) throw new Error("not deleted");
 };

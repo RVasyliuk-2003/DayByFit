@@ -35,6 +35,8 @@ const ExercisesPage = lazy(
 // чат несе важкий react-markdown, тож вантажиться окремо
 const Coach = lazy(() => import("./components/Coach/Coach"));
 
+const TypesPage = lazy(() => import("./components/pages/TypesPage/TypesPage"));
+
 const App = () => {
   const { user } = useAuth();
 
@@ -52,6 +54,7 @@ const App = () => {
     types,
     addType,
     loading: tLoading,
+    removeType,
     error: tError,
     retry: tRetry,
     dismissError: tDismiss,
@@ -85,6 +88,17 @@ const App = () => {
                     workouts={workouts}
                     types={types}
                     onDelete={removeWorkout}
+                  />
+                }
+              />
+
+              <Route
+                path="/types"
+                element={
+                  <TypesPage
+                    types={types}
+                    workouts={workouts}
+                    onRemove={removeType}
                   />
                 }
               />

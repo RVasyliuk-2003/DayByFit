@@ -38,7 +38,8 @@ type WorkoutRow = {
   note: string | null;
 };
 
-const DEFAULT_TYPES: Record<string, string> = { gym: "Зал", box: "Бокс", run: "Біг" };
+const DEFAULT_TYPES: Record<string, string> = { gym: "Зал" };
+
 const TIMES: Record<string, string> = {
   morning: "ранок",
   day: "день",

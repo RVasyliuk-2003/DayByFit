@@ -7,8 +7,6 @@ export const typeName = (type?: WorkoutType) =>
 
 export const defaultTypes: WorkoutType[] = [
   { id: "gym", name: "Зал", color: "#2B59FF", hasExercises: true },
-  { id: "box", name: "Бокс", color: "#D6362A", hasExercises: false },
-  { id: "run", name: "Біг", color: "#15803D", hasExercises: false },
 ];
 
 // export const timeLabels: Record<TimeOfDay, string> = {
