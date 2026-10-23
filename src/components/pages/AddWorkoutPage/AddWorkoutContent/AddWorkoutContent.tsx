@@ -146,7 +146,12 @@ const AddWorkoutContent = ({
   return (
     <section>
       <form onSubmit={handleSubmit} className={style.form_main}>
-        <span className={style.lbl}>{t("form.type")}</span>
+        <div className={style.nameType}>
+          <span className={style.lbl}>{t("form.type")}</span>
+          <Link to="/types" className={style.manage}>
+            {t("typesPage.manage")}
+          </Link>
+        </div>
         <div className={style.flexWrap}>
           {types.map((ell) => (
             <button
@@ -170,9 +175,6 @@ const AddWorkoutContent = ({
           </button>
         </div>
 
-        <Link to="/types" className={style.manage}>
-          {t("typesPage.manage")}
-        </Link>
         {creating && (
           <div className={style.newType}>
             <input

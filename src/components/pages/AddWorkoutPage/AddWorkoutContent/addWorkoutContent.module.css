@@ -327,3 +327,9 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+.nameType {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
