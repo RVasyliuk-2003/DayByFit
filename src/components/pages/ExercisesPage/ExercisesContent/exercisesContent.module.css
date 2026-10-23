@@ -41,12 +41,16 @@
 .row {
   display: flex;
   align-items: center;
+  border-top: 1px solid var(--line);
+
+  /* display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding: 14px 16px;
   color: var(--ink);
   text-decoration: none;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--line); */
 }
 
 .row:first-child {
@@ -85,4 +89,43 @@
   text-align: center;
   color: var(--ink-2);
   font: 700 18px var(--text);
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 8px 14px 16px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.actions {
+  display: flex;
+  flex: none;
+  padding-right: 8px;
+}
+
+.act {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.act svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }

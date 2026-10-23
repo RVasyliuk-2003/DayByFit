@@ -15,6 +15,8 @@ import { useWorkouts } from "./useWorkouts";
 import { useWorkoutTypes } from "./useWorkoutTypes";
 import { getExerciseNames } from "./progress";
 
+// import { updateWorkoutById } from "./cloud";
+
 const AccountPage = lazy(
   () => import("./components/pages/AccountPage/AccountPage"),
 );
@@ -40,6 +42,7 @@ const App = () => {
     workouts,
     addWorkout,
     removeWorkout,
+    updateWorkout,
     loading: wLoading,
     error: wError,
     retry: wRetry,
@@ -106,7 +109,9 @@ const App = () => {
               />
               <Route
                 path="/exercises"
-                element={<ExercisesPage workouts={workouts} />}
+                element={
+                  <ExercisesPage workouts={workouts} onUpdate={updateWorkout} />
+                }
               />
             </Route>
           </Routes>

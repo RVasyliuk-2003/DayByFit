@@ -6,6 +6,7 @@ type Options<T> = {
   fetchAll: () => Promise<T[]>;
   insert: (item: T) => Promise<void>;
   remove?: (id: string) => Promise<void>;
+  update?: (item: T) => Promise<void>;
 };
 
 // uid потрібен, щоб після зміни акаунта не показати чужий список, поки вантажиться свій
@@ -25,6 +26,7 @@ export const useSyncedList = <T extends { id: string }>({
   fetchAll,
   insert,
   remove,
+  update,
 }: Options<T>) => {
   const { user } = useAuth();
   const userId = user?.id ?? null;
@@ -94,6 +96,23 @@ export const useSyncedList = <T extends { id: string }>({
     });
   };
 
+    // замінюємо елемент із тим самим id; у разі збою повертаємо старий
+  const change = (item: T) => {
+    if (!userId) {
+      setLocal((prev) => prev.map((x) => (x.id === item.id ? item : x)));
+      return;
+    }
+    if (!update) return;
+    const before = items.find((x) => x.id === item.id);
+    changeCloud((list) => list.map((x) => (x.id === item.id ? item : x)));
+    update(item).catch(() => {
+      if (before) {
+        changeCloud((list) => list.map((x) => (x.id === before.id ? before : x)));
+      }
+      setError(true);
+    });
+  };
+
   const retry = () => {
     setError(false);
     setAttempt((a) => a + 1);
@@ -105,6 +124,7 @@ export const useSyncedList = <T extends { id: string }>({
     error: error && userId !== null,
     add,
     remove: removeItem,
+    change,
     retry,
     dismissError: () => setError(false),
   };

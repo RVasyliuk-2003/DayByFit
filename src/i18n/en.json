@@ -183,5 +183,11 @@
   "install": {
     "button": "Install",
     "ios": "Tap the Share button at the bottom, then “Add to Home Screen”."
-  }
+  },
+
+  "renamePrompt": "New exercise name",
+  "renameAria": "Rename",
+  "deleteAria": "Delete",
+  "deleteConfirm_one": "Delete “{{name}}” from {{count}} workout? This cannot be undone.",
+  "deleteConfirm_other": "Delete “{{name}}” from {{count}} workouts? This cannot be undone."
 }

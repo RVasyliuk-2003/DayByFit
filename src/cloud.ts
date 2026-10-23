@@ -52,6 +52,25 @@ export const deleteWorkoutById = async (id: string) => {
   if (error) throw error;
 };
 
+export const updateWorkoutById = async (w: Workout) => {
+  const { data, error } = await supabase
+    .from("workouts")
+    .update({
+      date: w.date,
+      time_of_day: w.timeOfDay,
+      duration_min: w.durationMin,
+      type_id: w.typeId,
+      exercises: w.exercises ?? null,
+      note: w.note ?? null,
+    })
+    .eq("id", w.id)
+    .select("id");
+  if (error) throw error;
+  
+  // якщо правила бази не дозволили, рядків оновлено 0, і це теж збій
+  if (!data || data.length === 0) throw new Error("not updated");
+};
+
 export const fetchTypes = async (): Promise<WorkoutType[]> => {
   const { data, error } = await supabase.from("workout_types").select("*");
   if (error) throw error;
