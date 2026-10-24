@@ -259,3 +259,58 @@
   right: auto;
   left: max(16px, calc((100vw - var(--app-w, 480px)) / 2 + 16px));
 }
+
+.about {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.aboutHint {
+  margin: 0;
+  font: 500 14px/1.4 var(--text);
+  color: var(--ink-2);
+}
+
+.aboutInput {
+  min-height: 160px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 16px/1.4 var(--text);
+  resize: vertical;
+}
+
+.aboutRow {
+  display: flex;
+  gap: 12px;
+  font: 500 12px var(--text);
+  color: var(--ink-2);
+}
+
+.aboutBtns {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.aboutSave {
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 600 14px var(--text);
+  cursor: pointer;
+}
+
+.aboutSave:disabled {
+  opacity: 0.4;
+  cursor: default;
+}

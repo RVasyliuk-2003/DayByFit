@@ -10,7 +10,9 @@ import { useAuth } from "../../auth/authContext";
 import {
   askCoach,
   clearCoach,
+  fetchAbout,
   fetchCoachHistory,
+  saveAbout,
   CoachLimitError,
   type CoachMessage,
 } from "../../coach";
@@ -77,17 +79,26 @@ const Coach = () => {
   const [streaming, setStreaming] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [vp, setVp] = useState(readViewport);
-  
-    const bottomRef = useRef<HTMLDivElement>(null);
-    const [fab, setFab] = useState(loadFab);
-    const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
-    const dragRef = useRef<{
-      startX: number;
-      startY: number;
-      offX: number;
-      offY: number;
-      moved: boolean;
-    } | null>(null);
+
+  // екран «Про мене»
+  const [view, setView] = useState<"chat" | "about">("chat");
+  const [about, setAbout] = useState("");
+  const [aboutState, setAboutState] = useState<
+    "idle" | "loading" | "saving" | "saved" | "error"
+  >("idle");
+
+  // перетягування кнопки
+  const [fab, setFab] = useState(loadFab);
+  const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
+  const dragRef = useRef<{
+    startX: number;
+    startY: number;
+    offX: number;
+    offY: number;
+    moved: boolean;
+  } | null>(null);
+
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   // історія вантажиться при першому відкритті (і заново, якщо зайшов інший акаунт)
   useEffect(() => {
@@ -114,7 +125,7 @@ const Coach = () => {
     };
   }, [open, userId, loadedFor, t]);
 
-  // панель лишається в межах ВИДИМОЇ області: і за висотою, і за зсувом (iOS зсуває її з клавіатурою)
+  // панель лишається в межах ВИДИМОЇ області: і за висотою, і за зсувом
   useEffect(() => {
     const v = window.visualViewport;
     if (!v) return;
@@ -147,6 +158,29 @@ const Coach = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // при закритті чату наступного разу починаємо з екрана розмови
+  useEffect(() => {
+    if (!open) setView("chat");
+  }, [open]);
+
+  // завантажуємо «Про мене», коли відкриваємо цей екран
+  useEffect(() => {
+    if (view !== "about" || !userId) return;
+    let cancelled = false;
+    fetchAbout()
+      .then((a) => {
+        if (cancelled) return;
+        setAbout(a);
+        setAboutState("idle");
+      })
+      .catch(() => {
+        if (!cancelled) setAboutState("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [view, userId]);
+
   const ready = loadedFor === userId;
   const shown = ready ? messages : [];
 
@@ -167,6 +201,7 @@ const Coach = () => {
       setError(t("coach.failed"));
     }
   };
+
   const send = async (raw: string) => {
     const message = raw.trim();
     if (!message || sending || !ready) return;
@@ -199,8 +234,21 @@ const Coach = () => {
     }
   };
 
-  if (!user) return null; // гостям тренер недоступний
+  const openAbout = () => {
+    setAboutState("loading");
+    setView("about");
+  };
 
+  const saveAboutText = async () => {
+    if (!userId) return;
+    setAboutState("saving");
+    try {
+      await saveAbout(userId, about.trim());
+      setAboutState("saved");
+    } catch {
+      setAboutState("error");
+    }
+  };
 
   const onFabDown = (e: ReactPointerEvent<HTMLButtonElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -251,6 +299,9 @@ const Coach = () => {
     dragRef.current = null;
     setDrag(null);
   };
+
+  // УСІ хуки вище; ранній вихід лише тут
+  if (!user) return null; // гостям тренер недоступний
 
   const showChips = ready && !sending && !text && !focused;
 
@@ -310,7 +361,16 @@ const Coach = () => {
               <p className={style.sub}>{t("coach.subtitle")}</p>
             </div>
             <div className={style.actions}>
-              {shown.length > 0 && (
+              {view === "chat" && (
+                <button
+                  type="button"
+                  className={style.clear}
+                  onClick={openAbout}
+                >
+                  {t("coach.about")}
+                </button>
+              )}
+              {view === "chat" && shown.length > 0 && (
                 <button type="button" className={style.clear} onClick={clear}>
                   {t("coach.clear")}
                 </button>
@@ -326,88 +386,141 @@ const Coach = () => {
             </div>
           </header>
 
-          <div className={style.list}>
-            {ready && shown.length === 0 && streaming === null && (
-              <p className={style.intro}>{t("coach.intro")}</p>
-            )}
-
-            {shown.map((m) => (
-              <div
-                key={m.id}
-                className={m.role === "user" ? style.user : style.bot}
-              >
-                {m.role === "user" ? m.content : <Markdown text={m.content} />}
-              </div>
-            ))}
-
-            {streaming !== null && (
-              <div className={style.bot}>
-                {streaming ? <Markdown text={streaming} /> : t("coach.typing")}
-              </div>
-            )}
-
-            {error && (
-              <p className={style.error} role="alert">
-                {error}
-              </p>
-            )}
-            <div ref={bottomRef} />
-          </div>
-
-          <div className={style.footer}>
-            {showChips && (
-              <div className={style.quick}>
-                {SUGGESTIONS.map((key) => (
-                  <button
-                    type="button"
-                    key={key}
-                    className={style.chip}
-                    onClick={() => send(t(key))}
-                  >
-                    {t(key)}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            <form
-              className={style.form}
-              onSubmit={(e) => {
-                e.preventDefault();
-                void send(text);
-              }}
-            >
+          {view === "about" ? (
+            <div className={style.about}>
+              <p className={style.aboutHint}>{t("coach.aboutHint")}</p>
               <textarea
-                className={style.input}
-                rows={1}
-                value={text}
-                placeholder={t("coach.placeholder")}
-                onChange={(e) => setText(e.target.value)}
-                onFocus={() => setFocused(true)}
-                onBlur={() => setFocused(false)}
-                onKeyDown={(e) => {
-                  // на комп'ютері Enter надсилає, Shift+Enter новий рядок; на телефоні Enter це новий рядок
-                  if (
-                    e.key === "Enter" &&
-                    !e.shiftKey &&
-                    !e.nativeEvent.isComposing &&
-                    window.matchMedia("(pointer: fine)").matches
-                  ) {
-                    e.preventDefault();
-                    void send(text);
-                  }
+                className={style.aboutInput}
+                value={about}
+                maxLength={1000}
+                placeholder={t("coach.aboutPlaceholder")}
+                disabled={aboutState === "loading"}
+                onChange={(e) => {
+                  setAbout(e.target.value);
+                  setAboutState("idle");
                 }}
               />
-              <button
-                type="submit"
-                className={style.send}
-                disabled={sending || !ready || !text.trim()}
-                aria-label={t("coach.send")}
-              >
-                ↑
-              </button>
-            </form>
-          </div>
+              <div className={style.aboutRow}>
+                <small>{about.length}/1000</small>
+                {aboutState === "saved" && (
+                  <small>{t("coach.aboutSaved")}</small>
+                )}
+                {aboutState === "error" && (
+                  <small className={style.error}>{t("coach.failed")}</small>
+                )}
+              </div>
+              <div className={style.aboutBtns}>
+                <button
+                  type="button"
+                  className={style.aboutSave}
+                  onClick={saveAboutText}
+                  disabled={aboutState === "saving" || aboutState === "loading"}
+                >
+                  {t("coach.aboutSave")}
+                </button>
+                <button
+                  type="button"
+                  className={style.clear}
+                  onClick={() => setView("chat")}
+                >
+                  {t("coach.aboutBack")}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className={style.list}>
+                {ready && shown.length === 0 && streaming === null && (
+                  <p className={style.intro}>{t("coach.intro")}</p>
+                )}
+
+                {shown.map((m) => (
+                  <div
+                    key={m.id}
+                    className={m.role === "user" ? style.user : style.bot}
+                  >
+                    {m.role === "user" ? (
+                      m.content
+                    ) : (
+                      <Markdown text={m.content} />
+                    )}
+                  </div>
+                ))}
+
+                {streaming !== null && (
+                  <div className={style.bot}>
+                    {streaming ? (
+                      <Markdown text={streaming} />
+                    ) : (
+                      t("coach.typing")
+                    )}
+                  </div>
+                )}
+
+                {error && (
+                  <p className={style.error} role="alert">
+                    {error}
+                  </p>
+                )}
+                <div ref={bottomRef} />
+              </div>
+
+              <div className={style.footer}>
+                {showChips && (
+                  <div className={style.quick}>
+                    {SUGGESTIONS.map((key) => (
+                      <button
+                        type="button"
+                        key={key}
+                        className={style.chip}
+                        onClick={() => send(t(key))}
+                      >
+                        {t(key)}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <form
+                  className={style.form}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void send(text);
+                  }}
+                >
+                  <textarea
+                    className={style.input}
+                    rows={1}
+                    value={text}
+                    placeholder={t("coach.placeholder")}
+                    onChange={(e) => setText(e.target.value)}
+                    onFocus={() => setFocused(true)}
+                    onBlur={() => setFocused(false)}
+                    onKeyDown={(e) => {
+                      // на комп'ютері Enter надсилає, Shift+Enter новий рядок; на телефоні Enter це новий рядок
+                      if (
+                        e.key === "Enter" &&
+                        !e.shiftKey &&
+                        !e.nativeEvent.isComposing &&
+                        window.matchMedia("(pointer: fine)").matches
+                      ) {
+                        e.preventDefault();
+                        void send(text);
+                      }
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    className={style.send}
+                    disabled={sending || !ready || !text.trim()}
+                    aria-label={t("coach.send")}
+                  >
+                    ↑
+                  </button>
+                </form>
+              </div>
+            </>
+          )}
         </div>
       )}
     </>

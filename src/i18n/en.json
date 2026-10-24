@@ -55,8 +55,14 @@
     "newType": "+ Custom type",
     "newTypeName": "Name (e.g. Running)",
     "newTypeColor": "Color {{color}}",
+    "editTitle": "Edit workout",
+    "saveChanges": "Save changes",
+    "notFound": "Workout not found.",
+    "toCalendar": "Back to calendar",
     "newTypeHasExercises": "Log exercises and sets",
-    "newTypeAdd": "Add type"
+    "newTypeAdd": "Add type",
+    "draftRestored": "Restored an unsaved draft.",
+    "draftDiscard": "Discard"
   },
 
   "progress": {
@@ -134,7 +140,12 @@
     "all": "All exercises",
     "last": "Last on {{date}}: {{set}}, {{n}}s",
     "empty": "No exercises yet. Log a gym workout and they will show up here.",
-    "notFound": "No such exercise. Add it in a new workout and it will show up here."
+    "notFound": "No such exercise. Add it in a new workout and it will show up here.",
+    "renamePrompt": "New exercise name",
+    "renameAria": "Rename",
+    "deleteAria": "Delete",
+    "deleteConfirm_one": "Delete “{{name}}” from {{count}} workout? This cannot be undone.",
+    "deleteConfirm_other": "Delete “{{name}}” from {{count}} workouts? This cannot be undone."
   },
 
   "account": {
@@ -178,19 +189,19 @@
     "loadFailed": "Couldn't load chat history.",
     "clear": "Clear",
     "clearConfirm": "Clear the chat? The coach will forget this conversation.",
-    "forgetConfirm": "Also erase the coach's notes about you (goals, injuries, preferences)? OK: erase, Cancel: keep."
+    "forgetConfirm": "Also erase the coach's notes about you (goals, injuries, preferences)? OK: erase, Cancel: keep.",
+    "about": "About me",
+    "aboutHint": "Tell the coach about yourself: goals, injuries, equipment, schedule. It will take this into account in every answer.",
+    "aboutPlaceholder": "E.g. I'm 22, my goal is to gain muscle, my left shoulder hurts, I train 4 times a week, I only have dumbbells at home",
+    "aboutSave": "Save",
+    "aboutSaved": "Saved",
+    "aboutBack": "← Back to chat"
   },
 
   "install": {
     "button": "Install",
     "ios": "Tap the Share button at the bottom, then “Add to Home Screen”."
   },
-
-  "renamePrompt": "New exercise name",
-  "renameAria": "Rename",
-  "deleteAria": "Delete",
-  "deleteConfirm_one": "Delete “{{name}}” from {{count}} workout? This cannot be undone.",
-  "deleteConfirm_other": "Delete “{{name}}” from {{count}} workouts? This cannot be undone.",
 
   "typesPage": {
     "title": "Workout types",
@@ -204,11 +215,6 @@
     "inUse_one": "This type is used in {{count}} workout. Delete that workout first.",
     "inUse_other": "This type is used in {{count}} workouts. Delete those workouts first."
   },
-
-  "editTitle": "Edit workout",
-  "saveChanges": "Save changes",
-  "notFound": "Workout not found.",
-  "toCalendar": "Back to calendar",
 
   "pendingSync": {
     "text_one": "{{count}} change waiting to sync. It will be saved when you're back online.",
