@@ -74,3 +74,18 @@ alter table public.coach_memory enable row level security;
 create policy "own memory select" on public.coach_memory
   for select
   using ((select auth.uid()) = user_id);
+
+-- ───────────── AI coach: "About me" ─────────────
+-- Free text written by the user. Read by the Edge Function (through RLS) and added to the prompt.
+create table public.coach_profile (
+  user_id     uuid primary key default auth.uid() references auth.users (id) on delete cascade,
+  about       text not null default '',
+  updated_at  timestamptz not null default now()
+);
+
+alter table public.coach_profile enable row level security;
+
+create policy "own profile" on public.coach_profile
+  for all
+  using ((select auth.uid()) = user_id)
+  with check ((select auth.uid()) = user_id);

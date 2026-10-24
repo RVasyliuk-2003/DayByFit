@@ -44,6 +44,7 @@ _Screenshots coming soon._
 - Workout types: gym, boxing, running, and **custom types** (own name and colour; optionally with exercises)
 - Gym workouts with exercises and sets (weight × reps), exercise-name suggestions from your history
 - Time of day, duration and a free-text note on every workout
+- An unsaved form is kept as a **draft**: if you leave the page by accident, it is restored when you come back
 - **Edit and delete** workouts, **rename and delete** exercises, manage workout types
 
 **Insights**
@@ -56,6 +57,7 @@ _Screenshots coming soon._
 
 - Chat with a coach that sees your last 12 weeks of workouts, notes and progress per exercise
 - **Streaming answers** (the reply appears gradually, like a real chat)
+- **"About me" profile:** write your goals, injuries and equipment once, and the coach takes it into account in every answer
 - **Long-term memory:** the coach keeps short notes about you (goals, injuries, preferences), updated in the background every few messages, and you can wipe them
 - Remembers the conversation, with a "clear chat" action
 - Per-user daily message limit to protect the shared free API quota
@@ -67,6 +69,7 @@ _Screenshots coming soon._
 - Data is stored in the cloud and private per user
 - Ukrainian and English interface
 - Installable as a **PWA** (home-screen icon, standalone mode, in-app "Install" button with an iOS hint)
+- **Works offline:** the app opens without a connection and shows the last synced data; changes made offline are queued on the device and synced automatically when the connection returns
 - Mobile-first layout, keyboard-aware chat for iOS and Android, code-split pages
 
 ---
@@ -86,12 +89,13 @@ _Screenshots coming soon._
 
 ## 🏗️ Architecture highlights
 
-- **`useSyncedList`**: one generic hook that powers workouts and workout types: loading, optimistic add / update / remove with **rollback on failure**, retry, and a per-user cloud cache that cannot leak between accounts.
+- **`useSyncedList`**: one generic hook that powers workouts and workout types: optimistic add / update / remove, a persistent **offline queue** (changes made without a connection wait on the device and are retried automatically, with idempotent retries and merging of repeated edits), a per-user data cache for offline start, and **rollback only when the server actually rejects** a change. The cache cannot leak between accounts.
 - **Row Level Security** on every table: each user can only read and write their own rows.
 - **The LLM key never reaches the browser.** The AI coach is a Supabase Edge Function: it verifies the user's JWT, applies the rate limit, builds the context from the user's data (through RLS), streams the model's answer back and saves the conversation.
 - **Abuse protection:** the daily limit is counted from messages that only the server can write, so a client cannot reset it. Notes and workout text are passed to the model as data, with an explicit instruction to ignore instructions found inside them.
 - **Memory** is a separate table that the function updates in the background (`waitUntil`), so replies are never slowed down by summarising.
 - **Performance:** route-level code splitting with `React.lazy`; the heavy markdown renderer is only loaded with the chat.
+- **Offline support:** a small hand-written service worker (network-first for the page with a fast fallback to the cache, cache-first for hashed assets); API requests are never cached.
 
 ---
 
@@ -128,6 +132,7 @@ The app uses these tables, each with RLS enabled and a `user_id` column that def
 | `workout_types`  | custom workout types                                               |
 | `coach_messages` | AI chat history (written by the Edge Function only)                |
 | `coach_memory`   | long-term notes about the user (written by the Edge Function only) |
+| `coach_profile`  | the "About me" text, written by the user                           |
 
 Full schema with Row Level Security policies: [`supabase/schema.sql`](supabase/schema.sql).
 
@@ -152,6 +157,7 @@ This project was created with the help of an AI assistant (**Claude**), and I wa
 
 - Defined the product: features, user flows, what to build next and what to leave out
 - Chose and directed the architecture (accounts, cloud sync, RLS, Edge Function for the coach)
+- Used the app in real conditions (in the gym with a weak signal), found that a failed save lost the workout, and specified the offline-first fix
 - Reviewed every change, ran it on real devices and reported precise bugs back (iOS keyboard covering the input, white screen from a hooks-order error, content hidden under the navigation bar, and more)
 - Set up and operated the real infrastructure myself: Supabase project, SQL and policies, secrets, Vercel deployment, git workflow
 - Made the trade-off decisions (e.g. hide-vs-delete for chat history, forbidding deletion of workout types that are in use)

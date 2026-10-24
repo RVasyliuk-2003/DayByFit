@@ -255,6 +255,7 @@
   color: var(--ink-2);
   cursor: pointer;
   text-decoration: underline;
+  white-space: nowrap;
 }
 
 .fabLeft {
