@@ -16,7 +16,8 @@
     "noWorkouts": "No workouts on this day",
     "addWorkout": "+ Add workout",
     "delete": "Delete",
-    "confirmDelete": "Delete this workout?"
+    "confirmDelete": "Delete this workout?",
+    "edit": "Edit"
   },
 
   "duration": { "h": "{{n}} h", "min": "{{n}} min" },
@@ -202,5 +203,10 @@
     "used_other": "{{count}} workouts",
     "inUse_one": "This type is used in {{count}} workout. Delete that workout first.",
     "inUse_other": "This type is used in {{count}} workouts. Delete those workouts first."
-  }
+  },
+
+  "editTitle": "Edit workout",
+  "saveChanges": "Save changes",
+  "notFound": "Workout not found.",
+  "toCalendar": "Back to calendar"
 }

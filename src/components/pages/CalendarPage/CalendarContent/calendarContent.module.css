@@ -174,3 +174,19 @@
   font: 700 15px var(--text);
   text-decoration: none;
 }
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.edit {
+  font: 600 13px var(--text);
+  color: var(--ink-2);
+  text-underline-offset: 3px;
+  text-decoration: underline;
+  margin: auto 16px 14px 16px;
+  cursor: pointer;
+  border: 0;
+  background: none;
+}

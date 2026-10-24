@@ -18,7 +18,9 @@ import { getType, typeColors, typeName } from "../../../../workoutTypes";
 import { useWorkoutDate } from "../../../../useWorkoutDate";
 
 type Props = {
+  editing?: Workout;
   onAdd: (workout: Workout) => void;
+  onUpdate: (workout: Workout) => void;
   types: WorkoutType[];
   onAddType: (type: WorkoutType) => void;
   exerciseNames: string[];
@@ -32,6 +34,8 @@ const emptyExercise = (): Exercise => ({
 });
 
 const AddWorkoutContent = ({
+  editing,
+  onUpdate,
   onAdd,
   types,
   onAddType,
@@ -39,13 +43,24 @@ const AddWorkoutContent = ({
 }: Props) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { dateKey: date } = useWorkoutDate();
 
-  const [typeId, setTypeId] = useState("gym");
-  const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>("evening");
-  const [durationMin, setDurationMin] = useState(60);
-  const [note, setNote] = useState("");
-  const [exercises, setExercises] = useState<Exercise[]>([emptyExercise()]);
+  const { dateKey } = useWorkoutDate();
+  const date = editing?.date ?? dateKey;
+
+  const [typeId, setTypeId] = useState(editing?.typeId ?? "gym");
+  const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>(
+    editing?.timeOfDay ?? "evening",
+  );
+  const [durationMin, setDurationMin] = useState(editing?.durationMin ?? 60);
+  const [note, setNote] = useState(editing?.note ?? "");
+  const [exercises, setExercises] = useState<Exercise[]>(() =>
+    editing?.exercises?.length
+      ? editing.exercises.map((ex) => ({
+          ...ex,
+          sets: ex.sets.map((s) => ({ ...s })),
+        }))
+      : [emptyExercise()],
+  );
 
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState("");
@@ -130,7 +145,7 @@ const AddWorkoutContent = ({
       .filter((ex) => ex.name && ex.sets.length > 0);
 
     const workout: Workout = {
-      id: crypto.randomUUID(),
+      id: editing?.id ?? crypto.randomUUID(),
       date,
       timeOfDay,
       durationMin,
@@ -139,7 +154,8 @@ const AddWorkoutContent = ({
       note: note.trim() || undefined,
     };
 
-    onAdd(workout);
+    if (editing) onUpdate(workout);
+    else onAdd(workout);
     navigate(`/?date=${date}`);
   };
 
@@ -347,7 +363,7 @@ const AddWorkoutContent = ({
         </label>
 
         <button type="submit" className={style.save_btn}>
-          {t("form.save")}
+          {editing ? t("form.saveChanges") : t("form.save")}
         </button>
       </form>
     </section>

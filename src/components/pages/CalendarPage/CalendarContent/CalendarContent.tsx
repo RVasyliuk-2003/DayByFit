@@ -56,13 +56,21 @@ const CalendarContent = ({
 
               {w.note && <p className={style.note}>{w.note}</p>}
 
-              <button
-                type="button"
-                className={style.del}
-                onClick={() => handleDelete(w.id)}
-              >
-                {t("calendar.delete")}
-              </button>
+              <div className={style.actions}>
+                <Link
+                  to={`/add?edit=${w.id}&date=${w.date}`}
+                  className={style.edit}
+                >
+                  {t("calendar.edit")}
+                </Link>
+                <button
+                  type="button"
+                  className={style.del}
+                  onClick={() => handleDelete(w.id)}
+                >
+                  {t("calendar.delete")}
+                </button>
+              </div>
             </article>
           );
         })

@@ -111,6 +111,8 @@ const App = () => {
                 element={
                   <AddWorkoutPage
                     onAdd={addWorkout}
+                    workouts={workouts}
+                    onUpdate={updateWorkout}
                     types={types}
                     onAddType={addType}
                     exerciseNames={getExerciseNames(workouts)}

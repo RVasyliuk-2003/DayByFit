@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getLocale } from "../../../../i18n/locale";
 import { toDateKey } from "../../../../date";
@@ -7,6 +8,8 @@ const AddWorkoutHeader = () => {
   const { t, i18n } = useTranslation();
   const locale = getLocale(i18n.language);
   const { dateObj, dateKey } = useWorkoutDate();
+  const [params] = useSearchParams();
+  const isEdit = params.has("edit");
 
   const isToday = dateKey === toDateKey(new Date());
 
@@ -25,7 +28,7 @@ const AddWorkoutHeader = () => {
   return (
     <section>
       <header className="top">
-        <h1 className="h1">{t("form.title")}</h1>
+        <h1 className="h1">{isEdit ? t("form.editTitle") : t("form.title")}</h1>
         <p className="p">
           {prefix}, {dayMonth}
         </p>
