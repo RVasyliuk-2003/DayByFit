@@ -18,21 +18,28 @@
 
 ---
 
+<p align="center">
+  <img src="docs/hero.png" alt="DayByFit — progress, calendar, summary and AI coach" width="100%">
+</p>
+
 ## 📸 Screenshots
 
-<!--
-  TODO: add screenshots to docs/screenshots/ and replace this block.
-  Suggested set: calendar, add workout, progress, AI coach, summary, exercises.
+<table>
+  <tr>
+    <td align="center" width="25%"><img src="docs/screenshots/calendar.png" alt="Calendar"><br><sub><b>Calendar</b><br>Workouts by day, colored by type</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/workout.png" alt="Workout details"><br><sub><b>Workout details</b><br>Exercises, sets, edit and delete</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/add-workout.png" alt="Add workout"><br><sub><b>Add workout</b><br>Autosaved draft, works offline</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/progress.png" alt="Progress"><br><sub><b>Progress</b><br>Weight and sets over time</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/summary.png" alt="Summary"><br><sub><b>Summary</b><br>Stats and a table to send</sub></td>
+    <td align="center"><img src="docs/screenshots/exercises.png" alt="Exercises"><br><sub><b>Exercises</b><br>Rename or delete everywhere</sub></td>
+    <td align="center"><img src="docs/screenshots/coach.png" alt="AI coach"><br><sub><b>AI coach</b><br>Streaming chat with memory</sub></td>
+    <td></td>
+  </tr>
+</table>
 
-<p align="center">
-  <img src="docs/screenshots/calendar.png" width="220" alt="Calendar" />
-  <img src="docs/screenshots/add-workout.png" width="220" alt="Add workout" />
-  <img src="docs/screenshots/progress.png" width="220" alt="Progress" />
-  <img src="docs/screenshots/coach.png" width="220" alt="AI coach" />
-</p>
--->
-
-_Screenshots coming soon._
+---
 
 ---
 

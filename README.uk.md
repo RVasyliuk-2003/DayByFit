@@ -18,21 +18,26 @@
 
 ---
 
-## 📸 Скриншоти
-
-<!--
-  TODO: додай скриншоти в docs/screenshots/ і заміни цей блок.
-  Пропонований набір: календар, додавання тренування, прогрес, AI-тренер, підсумки, вправи.
-
 <p align="center">
-  <img src="docs/screenshots/calendar.png" width="220" alt="Календар" />
-  <img src="docs/screenshots/add-workout.png" width="220" alt="Додавання тренування" />
-  <img src="docs/screenshots/progress.png" width="220" alt="Прогрес" />
-  <img src="docs/screenshots/coach.png" width="220" alt="AI-тренер" />
+  <img src="docs/hero.png" alt="DayByFit — прогрес, календар, підсумок та AI-тренер" width="100%">
 </p>
--->
 
-_Скриншоти скоро з'являться._
+## 📸 Скріншоти
+
+<table>
+  <tr>
+    <td align="center" width="25%"><img src="docs/screenshots/calendar.png" alt="Календар"><br><sub><b>Календар</b><br>Тренування по днях, кольори за типом</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/workout.png" alt="Тренування"><br><sub><b>Тренування</b><br>Вправи, підходи, редагування й видалення</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/add-workout.png" alt="Додати тренування"><br><sub><b>Додати тренування</b><br>Автозбереження чернетки, працює офлайн</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/progress.png" alt="Прогрес"><br><sub><b>Прогрес</b><br>Вага й підходи в часі</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/summary.png" alt="Підсумок"><br><sub><b>Підсумок</b><br>Статистика й таблиця для відправки</sub></td>
+    <td align="center"><img src="docs/screenshots/exercises.png" alt="Вправи"><br><sub><b>Вправи</b><br>Перейменування й видалення скрізь</sub></td>
+    <td align="center"><img src="docs/screenshots/coach.png" alt="AI-тренер"><br><sub><b>AI-тренер</b><br>Чат зі стрімінгом і пам'яттю</sub></td>
+    <td></td>
+  </tr>
+</table>
 
 ---
 
