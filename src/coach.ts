@@ -73,3 +73,21 @@ export const clearCoach = async (forget: boolean): Promise<void> => {
   });
   if (error) throw error;
 };
+
+export const fetchAbout = async (): Promise<string> => {
+  const { data, error } = await supabase
+    .from("coach_profile")
+    .select("about")
+    .maybeSingle();
+  if (error) throw error;
+  return data?.about ?? "";
+};
+
+export const saveAbout = async (userId: string, about: string) => {
+  const { error } = await supabase.from("coach_profile").upsert({
+    user_id: userId,
+    about,
+    updated_at: new Date().toISOString(),
+  });
+  if (error) throw error;
+};

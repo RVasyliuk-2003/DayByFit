@@ -11,12 +11,13 @@ export function useWorkoutTypes() {
     remove: deleteTypeById,
   });
 
-  return {
+   return {
     types: [...defaultTypes, ...list.items],
     addType: list.add,
     removeType: list.remove,
     loading: list.loading,
     error: list.error,
+    pending: list.pending,
     retry: list.retry,
     dismissError: list.dismissError,
   };

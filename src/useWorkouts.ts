@@ -23,6 +23,7 @@ export const useWorkouts = () => {
     updateWorkout: list.change,
     loading: list.loading,
     error: list.error,
+    pending: list.pending,
     retry: list.retry,
     dismissError: list.dismissError,
   };

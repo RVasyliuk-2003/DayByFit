@@ -333,3 +333,23 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.draftNote {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(20, 33, 61, 0.08);
+  font: 500 13px/1.4 var(--text);
+  color: var(--ink);
+}
+
+.draftBtn {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: 600 13px var(--text);
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}

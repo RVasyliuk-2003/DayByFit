@@ -208,5 +208,11 @@
   "editTitle": "Edit workout",
   "saveChanges": "Save changes",
   "notFound": "Workout not found.",
-  "toCalendar": "Back to calendar"
+  "toCalendar": "Back to calendar",
+
+  "pendingSync": {
+    "text_one": "{{count}} change waiting to sync. It will be saved when you're back online.",
+    "text_other": "{{count}} changes waiting to sync. They will be saved when you're back online.",
+    "retry": "Try now"
+  }
 }

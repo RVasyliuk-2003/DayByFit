@@ -14,6 +14,7 @@ import SyncStatus from "./components/SyncStatus/SyncStatus";
 import { useWorkouts } from "./useWorkouts";
 import { useWorkoutTypes } from "./useWorkoutTypes";
 import { getExerciseNames } from "./progress";
+import PendingSync from "./components/PendingSync/PendingSync";
 
 // import { updateWorkoutById } from "./cloud";
 
@@ -47,15 +48,17 @@ const App = () => {
     updateWorkout,
     loading: wLoading,
     error: wError,
+    pending: wPending,
     retry: wRetry,
     dismissError: wDismiss,
   } = useWorkouts();
   const {
     types,
     addType,
-    loading: tLoading,
     removeType,
+    loading: tLoading,
     error: tError,
+    pending: tPending,
     retry: tRetry,
     dismissError: tDismiss,
   } = useWorkoutTypes();
@@ -74,6 +77,13 @@ const App = () => {
           onDismiss={() => {
             wDismiss();
             tDismiss();
+          }}
+        />
+        <PendingSync
+          count={wPending + tPending}
+          onRetry={() => {
+            wRetry();
+            tRetry();
           }}
         />
         <Suspense fallback={null}>

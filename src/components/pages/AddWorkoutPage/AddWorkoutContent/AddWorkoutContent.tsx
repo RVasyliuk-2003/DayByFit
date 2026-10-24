@@ -1,11 +1,38 @@
 import style from "./addWorkoutContent.module.css";
 import { Link } from "react-router-dom";
 
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import ExerciseInput from "./ExerciseInput/ExerciseInput";
+
+type Draft = {
+  typeId: string;
+  timeOfDay: TimeOfDay;
+  durationMin: number;
+  note: string;
+  exercises: Exercise[];
+};
+
+const readDraft = (key: string): Draft | null => {
+  try {
+    const d = JSON.parse(localStorage.getItem(key) ?? "null");
+    if (
+      d &&
+      typeof d.typeId === "string" &&
+      typeof d.timeOfDay === "string" &&
+      typeof d.durationMin === "number" &&
+      typeof d.note === "string" &&
+      Array.isArray(d.exercises)
+    ) {
+      return d as Draft;
+    }
+  } catch {
+    /* пошкоджена чернетка */
+  }
+  return null;
+};
 
 import type {
   TimeOfDay,
@@ -47,20 +74,66 @@ const AddWorkoutContent = ({
   const { dateKey } = useWorkoutDate();
   const date = editing?.date ?? dateKey;
 
-  const [typeId, setTypeId] = useState(editing?.typeId ?? "gym");
-  const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>(
-    editing?.timeOfDay ?? "evening",
-  );
-  const [durationMin, setDurationMin] = useState(editing?.durationMin ?? 60);
-  const [note, setNote] = useState(editing?.note ?? "");
-  const [exercises, setExercises] = useState<Exercise[]>(() =>
-    editing?.exercises?.length
+  // чернетка: одна на нове тренування в цей день або на кожне тренування, що редагується
+  const draftKey = `daybyfit:draft:${editing ? editing.id : `new:${date}`}`;
+
+  const baseForm = (): Draft => ({
+    typeId: editing?.typeId ?? "gym",
+    timeOfDay: editing?.timeOfDay ?? "evening",
+    durationMin: editing?.durationMin ?? 60,
+    note: editing?.note ?? "",
+    exercises: editing?.exercises?.length
       ? editing.exercises.map((ex) => ({
           ...ex,
           sets: ex.sets.map((s) => ({ ...s })),
         }))
       : [emptyExercise()],
-  );
+  });
+
+  const [restored] = useState<Draft | null>(() => readDraft(draftKey));
+  const [init] = useState<Draft>(() => restored ?? baseForm());
+  const [showDraftNote, setShowDraftNote] = useState(restored !== null);
+
+  const [typeId, setTypeId] = useState(init.typeId);
+  const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>(init.timeOfDay);
+  const [durationMin, setDurationMin] = useState(init.durationMin);
+  const [note, setNote] = useState(init.note);
+  const [exercises, setExercises] = useState<Exercise[]>(init.exercises);
+
+  // тихо зберігаємо кожну зміну; якщо форма така сама, як на старті, чернетки нема
+  const skipSave = useRef(false);
+  useEffect(() => {
+    if (skipSave.current) return;
+    const current: Draft = { typeId, timeOfDay, durationMin, note, exercises };
+    try {
+      if (JSON.stringify(current) === JSON.stringify(baseForm())) {
+        localStorage.removeItem(draftKey);
+      } else {
+        localStorage.setItem(draftKey, JSON.stringify(current));
+      }
+    } catch {
+      /* сховище недоступне */
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draftKey, typeId, timeOfDay, durationMin, note, exercises]);
+
+  const discardDraft = () => {
+    const b = baseForm();
+    setTypeId(b.typeId);
+    setTimeOfDay(b.timeOfDay);
+    setDurationMin(b.durationMin);
+    setNote(b.note);
+    setExercises(b.exercises);
+    setShowDraftNote(false);
+  };
+  // const [exercises, setExercises] = useState<Exercise[]>(() =>
+  //   editing?.exercises?.length
+  //     ? editing.exercises.map((ex) => ({
+  //         ...ex,
+  //         sets: ex.sets.map((s) => ({ ...s })),
+  //       }))
+  //     : [emptyExercise()],
+  // );
 
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState("");
@@ -156,12 +229,31 @@ const AddWorkoutContent = ({
 
     if (editing) onUpdate(workout);
     else onAdd(workout);
+
+    skipSave.current = true;
+    try {
+      localStorage.removeItem(draftKey);
+    } catch {
+      /* не страшно */
+    }
     navigate(`/?date=${date}`);
   };
 
   return (
     <section>
       <form onSubmit={handleSubmit} className={style.form_main}>
+        {showDraftNote && (
+          <p className={style.draftNote} role="status">
+            {t("form.draftRestored")}{" "}
+            <button
+              type="button"
+              className={style.draftBtn}
+              onClick={discardDraft}
+            >
+              {t("form.draftDiscard")}
+            </button>
+          </p>
+        )}
         <div className={style.nameType}>
           <span className={style.lbl}>{t("form.type")}</span>
           <Link to="/types" className={style.manage}>
