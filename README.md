@@ -12,7 +12,7 @@
 ![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?logo=supabase&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel&logoColor=white)
 
-> 🤖 **AI-assisted project.** Built as a portfolio piece by a junior frontend developer working _together with_ an AI assistant (Claude). See [How this was built](#-how-this-was-built-ai-assisted) for what that means in practice.
+> 🤖 **AI-assisted project.** Built as a portfolio piece by a frontend developer working _together with_ an AI assistant (Claude). See [How this was built](#-how-this-was-built-ai-assisted) for what that means in practice.
 
 </div>
 
@@ -160,22 +160,11 @@ This project was created with the help of an AI assistant (**Claude**), and I wa
 
 - Proposed approaches and trade-offs, wrote and refactored code under my direction, explained errors and security implications
 
-**What I learned along the way:** React hooks rules in practice, optimistic UI with rollback, Supabase auth and Row Level Security, Edge Functions and streaming, i18n with plural forms, PWA basics, debugging mobile-specific problems, reading and fixing build and runtime errors.
-
 > I treat AI as a fast, knowledgeable pair-programmer: it speeds me up, but I own the decisions, the review, the testing and the deployment.
-
----
-
-## 🗺️ Roadmap
-
-- [ ] Coach tone settings
-- [ ] JSON backup of workout data
-- [ ] Publishing to Google Play (TWA)
-- [ ] Automated tests
 
 ---
 
 ## 👤 Author
 
-**RVasyliuk-2003**: junior frontend developer, Wrocław, Poland
+**RVasyliuk-2003**: frontend developer, Wrocław, Poland
 [GitHub](https://github.com/RVasyliuk-2003) · [Live demo](https://day-by-fit.vercel.app)
